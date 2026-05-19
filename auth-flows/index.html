@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../js/theme.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auth Flows — Salesforcepedia</title>
+<meta name="description" content="Interactive step-by-step walkthroughs of Salesforce OAuth 2.0 flows, JWT Bearer token assertions, and token lifecycle management for architects and developers.">
+<link rel="stylesheet" href="../css/global.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand">CTA <span>Study Guide</span></div>
+  <a href="../index.html" class="nav-link">Home</a>
+  <a href="#" class="nav-link active">Auth Flows</a>
+  <span class="badge">SALESFORCE</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+</nav>
+
+<a href="../index.html" class="back-link">← Back to Home</a>
+
+<header>
+  <div>
+    <h1>Auth Flow Simulator</h1>
+    <p>Step-by-step interactive walkthrough — no real connections, all data is simulated</p>
+  </div>
+  <span class="badge">EDUCATIONAL</span>
+</header>
+
+<div class="main">
+  <nav class="flow-nav" id="flow-nav">
+
+    <div class="flow-nav-group open">
+      <button class="flow-nav-group-btn" onclick="toggleGroup(this)">
+        <span class="flow-nav-group-arrow">▶</span>Browser / User-Facing
+      </button>
+      <div class="flow-nav-items">
+        <div class="flow-tab active" onclick="selectFlow('pkce', this)">Auth Code + PKCE</div>
+        <div class="flow-tab" onclick="selectFlow('canvas', this)">Canvas: Admin Pre-auth</div>
+        <div class="flow-tab" onclick="selectFlow('canvasfirst', this)">Canvas: Self-Authorization</div>
+        <div class="flow-tab disabled" title="Coming soon">Implicit (Legacy)</div>
+        <div class="flow-tab disabled" title="Coming soon">Device Code</div>
+      </div>
+    </div>
+
+    <div class="flow-nav-group">
+      <button class="flow-nav-group-btn" onclick="toggleGroup(this)">
+        <span class="flow-nav-group-arrow">▶</span>Server-to-Server
+      </button>
+      <div class="flow-nav-items">
+        <div class="flow-tab" onclick="selectFlow('clientcredentials', this)">Client Credentials</div>
+        <div class="flow-tab" onclick="selectFlow('jwt', this)">JWT Bearer</div>
+        <div class="flow-tab" onclick="selectFlow('samlbearer', this)">SAML Bearer</div>
+      </div>
+    </div>
+
+    <div class="flow-nav-group">
+      <button class="flow-nav-group-btn" onclick="toggleGroup(this)">
+        <span class="flow-nav-group-arrow">▶</span>SSO
+      </button>
+      <div class="flow-nav-items">
+        <div class="flow-tab" onclick="selectFlow('spinitsso', this)">SP-Initiated — SF as SP</div>
+        <div class="flow-tab" onclick="selectFlow('spinitsso_idp', this)">SP-Initiated — SF as IDP</div>
+        <div class="flow-tab disabled" title="Coming soon">IDP-Initiated</div>
+      </div>
+    </div>
+
+  </nav>
+
+  <div class="main-right">
+    <div class="steps-panel" id="steps-panel"></div>
+    <div class="content-panel" id="content-panel"></div>
+  </div>
+</div>
+
+<script src="js/sim-data.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/diagram.js"></script>
+<script src="flows/pkce.js"></script>
+<script src="flows/client-credentials.js"></script>
+<script src="flows/jwt.js"></script>
+<script src="flows/saml-bearer.js"></script>
+<script src="flows/canvas.js"></script>
+<script src="flows/canvas-first.js"></script>
+<script src="flows/sp-init-sso.js"></script>
+<script>render();</script>
+</body>
+</html>

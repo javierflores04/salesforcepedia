@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script src="js/theme.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforcepedia — Salesforce Architecture Reference</title>
+<meta name="description" content="Salesforcepedia: a structured reference for Salesforce architecture patterns, Agentforce, Data Cloud, integration flows, auth patterns, and CTA board exam tracking.">
+<link rel="stylesheet" href="css/global.css">
+<style>
+  .home-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+  }
+
+  /* ── Category section ── */
+  .category { margin-bottom: 52px; }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .category-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+  }
+
+  .category-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Card grid ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+
+  .card.disabled {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .card-icon { font-size: 32px; line-height: 1; }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .card-tag {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .tag-ready    { background: rgba(110,231,183,0.15); color: var(--green);  }
+  .tag-soon     { background: rgba(168,164,192,0.15); color: var(--muted);  }
+  .tag-new      { background: rgba(125,211,252,0.15); color: var(--accent); }
+
+  .card-arrow {
+    font-size: 16px;
+    color: var(--muted);
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .card:hover .card-arrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  /* ── Hero ── */
+  .home-hero {
+    padding: 52px 48px 44px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+
+  .home-hero .eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .home-hero h1 {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .home-hero h1 span { color: var(--accent); }
+
+  .home-hero p {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+  }
+
+  .hero-stat-val {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .hero-stat-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="brand">Salesforce<span>pedia</span></div>
+  <a href="index.html" class="nav-link active">Home</a>
+  <span class="badge">SALESFORCE</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+</nav>
+
+<div class="home-hero">
+  <div class="eyebrow">Salesforce Knowledge Base</div>
+  <h1>Salesforce<span>pedia</span></h1>
+  <p>A structured reference for architecture patterns, integration flows, data models, and system design decisions — plus CTA board exam tracking.</p>
+</div>
+
+<div class="home-main">
+
+  <!-- PROGRESS -->
+  <div class="category">
+    <div class="category-header"><h2>My CTA Journey</h2></div>
+    <div class="card-grid">
+
+      <a href="progress/index.html" class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Track Progress</div>
+        <div class="card-desc">Log mock presentations, score each area, and track your progress toward the CTA board passing thresholds — ≥ 2 per area, ≥ 67 overall.</div>
+        <div class="card-footer">
+          <span class="card-tag tag-ready">Live</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- AI & DATA -->
+  <div class="category">
+    <div class="category-header"><h2>AI &amp; Data</h2></div>
+    <div class="card-grid">
+
+      <a href="agentforce/index.html" class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Agentforce Architecture</div>
+        <div class="card-desc">Hybrid reasoning model, blueprint hierarchy, deterministic sandwich pattern, RAG strategy, and a full banking agent example with step-by-step configuration.</div>
+        <div class="card-footer">
+          <span class="card-tag tag-ready">Live</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="data-cloud/index.html" class="card">
+        <div class="card-icon">☁️</div>
+        <div class="card-title">Data 360 Architecture</div>
+        <div class="card-desc">Ingest patterns, DLO/DMO data model, identity resolution, unstructured AI grounding, governance, and multi-org strategy — formerly Salesforce Data Cloud.</div>
+        <div class="card-footer">
+          <span class="card-tag tag-ready">Live</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- INTEGRATION & SECURITY -->
+  <div class="category">
+    <div class="category-header"><h2>Integration & Security</h2></div>
+    <div class="card-grid">
+
+      <a href="auth-flows/index.html" class="card">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Auth Flows</div>
+        <div class="card-desc">Interactive step-by-step walkthroughs of OAuth 2.0 flows, JWT Bearer assertions, and token lifecycle management.</div>
+        <div class="card-footer">
+          <span class="card-tag tag-ready">3 flows ready</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

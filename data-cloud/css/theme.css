@@ -1,0 +1,458 @@
+/* ── Data Cloud module — CSS variable overrides + component styles ── */
+
+/* ── Tab bar ── */
+.tab-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 40px;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  flex-wrap: wrap;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.tab-btn {
+  padding: 14px 22px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Override global palette to Data Cloud cyan for this module */
+:root {
+  --accent:   #06b6d4;
+  --accent2:  #8b5cf6;
+  --border:   #1a3550;
+  --bg:       #080e1c;
+  --surface:  #0c1220;
+  --surface2: #0f1f3d;
+  --text:     #f1f5f9;
+  --muted:    #94a3b8;
+  --green:    #86efac;
+  --red:      #fca5a5;
+  --code-bg:  #0a1628;
+
+  --h1-grad:        linear-gradient(90deg, #06b6d4, #8b5cf6, #06b6d4);
+  --do-color:       #86efac;
+  --dont-color:     #fca5a5;
+
+  /* Aliases for compatibility */
+  --bg-base:        var(--bg);
+  --bg-surface:     var(--surface);
+  --text-primary:   var(--text);
+  --text-secondary: var(--text);
+  --text-muted:     var(--muted);
+  --text-faint:     var(--muted);
+  --text-footer:    var(--muted);
+}
+
+[data-theme="light"] {
+  --accent:   #0284c7;
+  --accent2:  #7c3aed;
+  --border:   #bae6fd;
+  --bg:       #f0f7fa;
+  --surface:  #ffffff;
+  --surface2: #f0f9ff;
+  --text:     #0f172a;
+  --muted:    #475569;
+  --green:    #16a34a;
+  --red:      #dc2626;
+  --code-bg:  #f1f5f9;
+
+  --h1-grad:        linear-gradient(90deg, #0284c7, #7c3aed, #0284c7);
+  --do-color:       #16a34a;
+  --dont-color:     #dc2626;
+
+  /* Aliases for compatibility */
+  --bg-base:        var(--bg);
+  --bg-surface:     var(--surface);
+  --text-primary:   var(--text);
+  --text-secondary: var(--text);
+  --text-muted:     var(--muted);
+  --text-faint:     var(--muted);
+  --text-footer:    var(--muted);
+}
+
+/* ── Page hero override for data cloud cyan accent ── */
+.page-hero .eyebrow { color: var(--accent); }
+
+/* ── Content wrapper ── */
+.content-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* ── Section header ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.icon-cyan   { background: rgba(6,182,212,0.15);  border: 1px solid rgba(6,182,212,0.35); }
+.icon-purple { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.35); }
+.icon-green  { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.35); }
+.icon-amber  { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.35); }
+.icon-rose   { background: rgba(244,63,94,0.15);  border: 1px solid rgba(244,63,94,0.35); }
+.icon-indigo { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.35); }
+
+.section-header h2 {
+  font-size: 1.4rem; font-weight: 600;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+.section-header p {
+  font-size: 0.85rem; color: var(--muted);
+  margin-top: 2px;
+  transition: color 0.3s;
+}
+
+/* ── Cards ── */
+.card-grid { display: grid; gap: 16px; }
+.cols-2 { grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+.cols-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cols-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+.af-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  transition: border-color 0.2s, transform 0.2s, background 0.3s;
+}
+
+.af-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.af-card h3 {
+  font-size: 1rem; font-weight: 600;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text);
+  transition: color 0.3s;
+}
+
+.af-card p, .af-card li {
+  font-size: 0.875rem; color: var(--muted);
+  line-height: 1.6;
+  transition: color 0.3s;
+}
+
+.af-card ul { list-style: none; padding: 0; }
+.af-card ul li { padding: 3px 0 3px 16px; position: relative; }
+.af-card ul li::before { content: "›"; position: absolute; left: 0; color: var(--accent); }
+
+/* hover variants */
+.cyan-hover:hover   { border-color: #06b6d4 !important; }
+.purple-hover:hover { border-color: #8b5cf6 !important; }
+.green-hover:hover  { border-color: #10b981 !important; }
+.amber-hover:hover  { border-color: #f59e0b !important; }
+.rose-hover:hover   { border-color: #f43f5e !important; }
+
+/* ── dc-tag badges ── */
+.dc-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+.tag-cyan   { background: rgba(6,182,212,0.15);  color: #06b6d4; }
+.tag-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.tag-green  { background: rgba(16,185,129,0.15); color: #34d399; }
+.tag-amber  { background: rgba(245,158,11,0.15); color: #fbbf24; }
+.tag-rose   { background: rgba(244,63,94,0.15);  color: #fb7185; }
+
+[data-theme="light"] .tag-cyan   { background: rgba(2,132,199,0.1);   color: #0284c7; }
+[data-theme="light"] .tag-purple { background: rgba(124,58,237,0.1);  color: #7c3aed; }
+[data-theme="light"] .tag-green  { background: rgba(5,150,105,0.1);   color: #059669; }
+[data-theme="light"] .tag-amber  { background: rgba(217,119,6,0.1);   color: #d97706; }
+[data-theme="light"] .tag-rose   { background: rgba(190,18,60,0.1);   color: #be123c; }
+
+/* ── dc-table (comparison table) ── */
+.dc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  font-size: 0.845rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.dc-table th {
+  background: rgba(6,182,212,0.08);
+  padding: 14px 18px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.3s, color 0.3s;
+}
+
+.dc-table td {
+  padding: 12px 18px;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+  line-height: 1.6;
+  transition: color 0.3s;
+}
+
+[data-theme="light"] .dc-table td {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.dc-table tr:last-child td { border-bottom: none; }
+.dc-table tr:hover td { background: rgba(6,182,212,0.04); }
+.dc-table td:first-child { font-weight: 600; color: var(--text); }
+
+/* dc-table wrapper for rounded corners + overflow */
+.dc-table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.dc-table-wrap .dc-table {
+  border: none;
+  border-radius: 0;
+}
+
+/* ── Pipeline ── */
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding: 8px 0 16px;
+}
+
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 160px;
+  flex: 1;
+  position: relative;
+}
+
+.pipeline-step:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -16px;
+  top: 22px;
+  font-size: 1.6rem;
+  color: var(--accent);
+  z-index: 1;
+}
+
+.pipe-bubble {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.pb-cyan   { background: rgba(6,182,212,0.2);  border: 2px solid #06b6d4; }
+.pb-purple { background: rgba(139,92,246,0.2); border: 2px solid #8b5cf6; }
+.pb-green  { background: rgba(16,185,129,0.2); border: 2px solid #10b981; }
+.pb-amber  { background: rgba(245,158,11,0.2); border: 2px solid #f59e0b; }
+
+.pipe-label { font-size: 0.82rem; font-weight: 700; color: var(--text); text-align: center; transition: color 0.3s; }
+.pipe-sub   { font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.4; max-width: 140px; transition: color 0.3s; }
+
+/* ── Lifecycle container ── */
+.lifecycle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+/* ── Insight cards ── */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.insight-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.insight-calc::before   { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.insight-stream::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.insight-rt::before     { background: linear-gradient(90deg, #10b981, #34d399); }
+
+.insight-card h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; transition: color 0.3s; }
+.insight-card .insight-tag { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+.tag-calc   { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.tag-stream { background: rgba(6,182,212,0.15);  color: #22d3ee; }
+.tag-rt     { background: rgba(16,185,129,0.15); color: #34d399; }
+.insight-card p { font-size: 0.845rem; color: var(--muted); line-height: 1.6; transition: color 0.3s; }
+.insight-card .insight-use { margin-top: 10px; font-size: 0.78rem; color: var(--muted); font-style: italic; transition: color 0.3s; }
+
+/* ── Governance grid cards ── */
+.gov-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.gov-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 22px;
+  transition: background 0.3s, border-color 0.3s, transform 0.2s;
+}
+
+.gov-card:hover { transform: translateY(-2px); border-color: var(--accent2); }
+
+.gov-card h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s;
+}
+
+.gov-card p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; transition: color 0.3s; }
+
+/* ── Multi-org diagram ── */
+.org-diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.org-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.org-box {
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 160px;
+}
+
+.org-home {
+  background: rgba(6,182,212,0.12);
+  border: 2px solid #06b6d4;
+}
+
+.org-companion {
+  background: rgba(139,92,246,0.12);
+  border: 2px solid #8b5cf6;
+}
+
+.org-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+.org-home h4 { color: #06b6d4; }
+.org-companion h4 { color: #a78bfa; }
+.org-box p { font-size: 0.75rem; color: var(--muted); transition: color 0.3s; }
+
+.org-arrow {
+  font-size: 1.5rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.org-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+  font-style: italic;
+  transition: color 0.3s;
+}
+
+/* ── Mermaid ── */
+.mermaid-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  overflow-x: auto;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.mermaid { margin: 0 auto; }
+
+/* ── Footer ── */
+.af-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  transition: color 0.3s, border-color 0.3s;
+}

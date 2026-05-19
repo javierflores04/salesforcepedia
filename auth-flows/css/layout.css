@@ -1,0 +1,147 @@
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+header p  { font-size: 15px; color: var(--muted); }
+
+.badge {
+  background: var(--accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Three-column main layout ─────────────────────────────────────── */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* LEFT: collapsible flow navigator */
+.flow-nav {
+  width: 220px;
+  min-width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 16px 0 24px;
+  flex-shrink: 0;
+}
+
+/* Group container */
+.flow-nav-group {
+  margin-bottom: 2px;
+}
+
+/* Group toggle button */
+.flow-nav-group-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--muted);
+  text-align: left;
+  transition: color 0.15s;
+}
+.flow-nav-group-btn:hover { color: var(--text); }
+
+.flow-nav-group-arrow {
+  font-size: 9px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.flow-nav-group.open .flow-nav-group-arrow {
+  transform: rotate(90deg);
+}
+
+/* Items list — hidden when group is closed */
+.flow-nav-items {
+  display: none;
+  flex-direction: column;
+}
+.flow-nav-group.open .flow-nav-items {
+  display: flex;
+}
+
+/* Individual flow items */
+.flow-tab {
+  padding: 8px 16px 8px 30px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.flow-tab:hover { color: var(--text); background: var(--surface2); }
+.flow-tab.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--surface2);
+}
+.flow-tab.disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* MIDDLE + RIGHT wrapper */
+.main-right {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* MIDDLE: step list */
+.steps-panel {
+  width: 240px;
+  min-width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+
+.steps-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  padding: 0 16px 12px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* RIGHT: content */
+.content-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+  max-width: 900px;
+}
