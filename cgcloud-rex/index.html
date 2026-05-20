@@ -626,6 +626,153 @@
 <div id="tab-compare" class="tab-panel">
   <div class="content-wrap">
 
+    <!-- ── Conceptual Architecture Overview ── -->
+    <div class="card">
+      <div class="section-label">Conceptual Architecture</div>
+      <h2 class="card-title">Data Architecture: Base vs Enhanced</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">
+        Side-by-side overview of both data models organized by functional domain. <span style="color:var(--green);font-weight:700;">Green</span> = Enhanced-only objects (requires managed package).
+      </p>
+
+      <div class="arch-diagram">
+
+        <!-- ════ BASE MODEL column ════ -->
+        <div class="arch-col">
+          <div class="arch-col-header arch-col-base">🔵 Base Model</div>
+
+          <!-- Store Management -->
+          <div class="arch-domain domain-stores">
+            <div class="arch-domain-title">🏪 Store Management</div>
+            <div class="arch-obj"><span class="arch-card arch-card-sf">Account</span></div>
+            <div class="arch-obj child"><span class="arch-rel">1:N →</span><span class="arch-card arch-card-base">RetailStore</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-base">RetailLocationGroup</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-base">InStoreLocation</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-sf">Product2</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">StoreProduct</span><span class="arch-obj-muted">(→ RetailStore)</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">Assortment</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">StoreAssortment</span><span class="arch-obj-muted">(→ RetailStore)</span></div>
+          </div>
+
+          <!-- Visit Execution -->
+          <div class="arch-domain domain-visits">
+            <div class="arch-domain-title">📋 Visit Execution</div>
+            <div class="arch-obj"><span class="arch-card arch-card-sf">ActionPlanTemplate</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">AssessmentTaskDefinition</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-base">AssessmentTaskIndDef</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">Visit</span><span class="arch-obj-muted">(→ RetailStore)</span></div>
+            <div class="arch-obj child"><span class="arch-rel">1:N →</span><span class="arch-card arch-card-base">AssessmentTask</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-base">RetailVisitKpi</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">AssessmentIndicatorDef</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">RetailStoreKpi</span><span class="arch-obj-muted">(→ RLG)</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">Promotion</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">PromotionChannel</span><span class="arch-obj-muted">(→ RetailStore)</span></div>
+          </div>
+
+          <!-- Orders -->
+          <div class="arch-domain domain-orders">
+            <div class="arch-domain-title">🛒 Orders</div>
+            <div class="arch-obj"><span class="arch-card arch-card-sf">Order</span><span class="arch-obj-muted">(→ Account)</span></div>
+            <div class="arch-obj child"><span class="arch-rel">1:N →</span><span class="arch-card arch-card-sf">OrderItem</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Product2</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">AssessmentTaskOrder</span></div>
+            <div class="arch-obj child"><span class="arch-obj-muted">order taken during a visit task</span></div>
+          </div>
+
+        </div>
+
+        <!-- ════ ENHANCED MODEL column ════ -->
+        <div class="arch-col">
+          <div class="arch-col-header arch-col-enhanced">⚡ Enhanced Model</div>
+
+          <!-- Customer Management (Enhanced shifts from store to account) -->
+          <div class="arch-domain domain-stores">
+            <div class="arch-domain-title">👤 Customer Management</div>
+            <div class="arch-obj"><span class="arch-card arch-card-sf">Account</span><span class="arch-obj-muted">(primary anchor — replaces RetailStore)</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-new">CustomerTemplate</span><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Account</span></div>
+            <div class="arch-obj" style="margin-top:4px;"><span class="arch-card arch-card-new">CustomerSet</span><span class="arch-obj-muted">(groups accounts for targeting)</span></div>
+          </div>
+
+          <!-- Organization & Territory (new) -->
+          <div class="arch-domain domain-territory">
+            <div class="arch-domain-title">🗺️ Organization &amp; Territory <span class="arch-card arch-card-new" style="font-size:0.62rem;padding:1px 5px;">NEW</span></div>
+            <div class="arch-obj"><span class="arch-card arch-card-new">OrgUnit</span><span class="arch-rel">→ self</span><span class="arch-obj-muted">(Country → Region → District)</span></div>
+            <div class="arch-obj child"><span class="arch-rel">N:N →</span><span class="arch-card arch-card-sf">Account</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-new">TripList</span><span class="arch-obj-muted">(ordered account route)</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-base">Visit</span><span class="arch-obj-muted">(drives visit creation)</span></div>
+          </div>
+
+          <!-- Visit Execution (enhanced) -->
+          <div class="arch-domain domain-visits">
+            <div class="arch-domain-title">📋 Visit Execution</div>
+            <div class="arch-obj"><span class="arch-card arch-card-base">Visit</span><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Account</span><span class="arch-obj-muted">(not RetailStore ✦)</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-new">JobTemplate</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-new">JobDefinitionTemplate</span></div>
+            <div class="arch-obj child2"><span class="arch-rel">→</span><span class="arch-card arch-card-new">ActivityTemplate</span></div>
+            <div class="arch-obj child" style="margin-top:4px;"><span class="arch-rel">→ creates</span><span class="arch-card arch-card-base">Visit</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-base">Visit</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-new">CustomerTask</span><span class="arch-obj-muted">(ad-hoc)</span></div>
+          </div>
+
+          <!-- Advanced Orders (new) -->
+          <div class="arch-domain domain-orders">
+            <div class="arch-domain-title">🛒 Advanced Orders <span class="arch-card arch-card-new" style="font-size:0.62rem;padding:1px 5px;">NEW</span></div>
+            <div class="arch-obj"><span class="arch-card arch-card-new">AuthorizationList</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-new">ListingModule</span><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Account</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-new">AdvancedOrder</span><span class="arch-obj-muted">(→ Account)</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Product2</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-card arch-card-new">AdvancedPromotion</span><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Account</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-new">PromotionTactic</span><span class="arch-rel">→</span><span class="arch-card arch-card-sf">Product2</span></div>
+          </div>
+
+          <!-- Assets & Inventory (new) -->
+          <div class="arch-domain domain-assets">
+            <div class="arch-domain-title">📦 Assets &amp; Inventory <span class="arch-card arch-card-new" style="font-size:0.62rem;padding:1px 5px;">NEW</span></div>
+            <div class="arch-obj"><span class="arch-card arch-card-new">AssetTemplate</span></div>
+            <div class="arch-obj child"><span class="arch-rel">→</span><span class="arch-card arch-card-new">Asset</span><span class="arch-obj-muted">(→ Account)</span></div>
+            <div class="arch-obj" style="margin-top:8px;"><span class="arch-obj-muted">Shipment / ProductItem / ProductTransfer</span></div>
+            <div class="arch-obj child"><span class="arch-obj-muted">inventory movement (shared with Base)</span></div>
+          </div>
+
+        </div>
+      </div><!-- /.arch-diagram -->
+
+      <!-- Legend -->
+      <div class="arch-legend">
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(148,163,184,0.6);border:1px solid rgba(148,163,184,0.5);"></div>
+          <span>Standard Salesforce — no CG license needed</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(0,161,224,0.5);border:1px solid rgba(0,161,224,0.5);"></div>
+          <span>Base Model — CG Cloud license</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(134,239,172,0.6);border:1px solid rgba(134,239,172,0.5);"></div>
+          <span>Enhanced — managed package</span>
+        </div>
+        <div class="arch-legend-item" style="margin-left:8px;padding-left:8px;border-left:1px solid var(--border);">
+          <div class="arch-legend-dot" style="background:rgba(0,161,224,0.4);border:1px solid rgba(0,161,224,0.3);"></div>
+          <span>🏪 Store Mgmt / 👤 Customer Mgmt</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(251,191,36,0.4);border:1px solid rgba(251,191,36,0.3);"></div>
+          <span>📋 Visit Execution</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(248,113,113,0.4);border:1px solid rgba(248,113,113,0.3);"></div>
+          <span>🛒 Orders</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(167,139,250,0.4);border:1px solid rgba(167,139,250,0.3);"></div>
+          <span>🗺️ Org &amp; Territory</span>
+        </div>
+        <div class="arch-legend-item">
+          <div class="arch-legend-dot" style="background:rgba(134,239,172,0.4);border:1px solid rgba(134,239,172,0.3);"></div>
+          <span>📦 Assets &amp; Inventory</span>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <div class="section-label">Feature Comparison</div>
       <h2 class="card-title">Base Model vs Enhanced Model — applied to the SnackCo scenario</h2>
