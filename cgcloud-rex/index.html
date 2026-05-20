@@ -376,32 +376,32 @@
       <h2 class="card-title">Key objects and relationships</h2>
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Core objects grouped by process: store master data, product catalog, visit execution, and KPI framework.</p>
       <div id="diagram-base" class="mermaid" style="background:transparent;">
-erDiagram
-    Account ||--o{ RetailStore : "has stores"
-    RetailStore }o--|| RetailLocationGroup : "belongs to"
-    RetailStore ||--o{ InStoreLocation : "has locations"
-    RetailStore ||--o{ StoreProduct : "carries"
-    Product2 ||--o{ StoreProduct : "placed at"
-    Product2 ||--o{ AssortmentProduct : "included in"
-    Assortment ||--o{ AssortmentProduct : "contains"
-    Assortment ||--o{ StoreAssortment : "assigned via"
-    RetailStore ||--o{ StoreAssortment : "has assortments"
+graph LR
+    ACC["Account"] --> RS["RetailStore"]
+    RS --> RLG["RetailLocationGroup"]
+    RS --> ISL["InStoreLocation"]
 
-    Promotion ||--o{ PromotionChannel : "runs at"
-    RetailStore ||--o{ PromotionChannel : "hosts"
-    Promotion ||--o{ PromotionProduct : "covers"
-    Product2 ||--o{ PromotionProduct : "featured in"
+    P2["Product2"] --> SP["StoreProduct"]
+    SP --> RS
+    ASS["Assortment"] --> SA["StoreAssortment"]
+    SA --> RS
 
-    ActionPlanTemplate ||--o{ AssessmentTaskDefinition : "includes"
-    AssessmentIndicatorDefinition ||--o{ AssessmentTaskDefinition : "measured by"
-    RetailLocationGroup ||--o{ RetailStoreKpi : "targets defined for"
-    AssessmentIndicatorDefinition ||--o{ RetailStoreKpi : "defines metric"
+    PRO["Promotion"] --> PC["PromotionChannel"]
+    PC --> RS
+    PRO --> PP["PromotionProduct"]
+    PP --> P2
 
-    Visit ||--o{ AssessmentTask : "contains"
-    AssessmentTaskDefinition ||--o{ AssessmentTask : "instantiated as"
-    AssessmentTask ||--o{ RetailVisitKpi : "captures"
-    RetailStoreKpi ||--o{ RetailVisitKpi : "compared against"
-    ActionPlanTemplate ||--o{ Visit : "applied to"
+    AID["AssessmentIndicatorDef"] --> RSKPI["RetailStoreKpi"]
+    RLG --> RSKPI
+    ATD["AssessmentTaskDef"] --> AID
+
+    APT["ActionPlanTemplate"] --> ATD
+    APT --> V["Visit"]
+    RS --> V
+    V --> AT["AssessmentTask"]
+    ATD --> AT
+    AT --> RVKPI["RetailVisitKpi"]
+    RSKPI --> RVKPI
       </div>
     </div>
 
@@ -642,30 +642,30 @@ erDiagram
       <h2 class="card-title">New objects and how they connect to the base layer</h2>
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Shows Enhanced-only objects (territory, advanced orders, advanced promotions, offline visits) and how they extend the base model relationships.</p>
       <div id="diagram-enhanced" class="mermaid" style="background:transparent;">
-erDiagram
-    OrgUnit ||--o{ OrgUnit : "parent of"
-    OrgUnit ||--o{ Account : "owns"
-    Account ||--o{ RetailStore : "has stores"
+graph LR
+    OU["OrgUnit"] --> OU
+    OU --> ACC["Account"]
+    ACC --> RS["RetailStore"]
 
-    CustomerTemplate ||--o{ Account : "standardizes"
-    AuthorizationList ||--o{ ListingModule : "grouped in"
-    ListingModule ||--o{ Account : "assigned to"
-    Account ||--o{ AdvancedOrder : "orders via"
-    Product2 ||--o{ AdvancedOrder : "ordered in"
+    CT["CustomerTemplate"] --> ACC
+    AL["AuthorizationList"] --> LM["ListingModule"]
+    LM --> ACC
+    ACC --> AO["AdvancedOrder"]
+    P2["Product2"] --> AO
 
-    AdvancedPromotion ||--o{ PromotionTactic : "broken into"
-    PromotionTactic ||--o{ Product2 : "targets"
-    AdvancedPromotion ||--o{ Account : "planned for"
+    AP["AdvancedPromotion"] --> PT["PromotionTactic"]
+    PT --> P2
+    AP --> ACC
 
-    JobTemplate ||--o{ JobDefinitionTemplate : "contains"
-    JobDefinitionTemplate ||--o{ ActivityTemplate : "uses"
-    JobTemplate ||--o{ Visit : "drives"
-    TripList ||--o{ Visit : "sequences"
-    Visit ||--o{ CustomerTask : "has"
-    CustomerTaskTemplate ||--o{ CustomerTask : "instantiated as"
+    JT["JobTemplate"] --> JDT["JobDefTemplate"]
+    JDT --> ACT["ActivityTemplate"]
+    JT --> V["Visit"]
+    TL["TripList"] --> V
+    V --> CUT["CustomerTask"]
+    CTT["CustomerTaskTemplate"] --> CUT
 
-    RetailStore ||--o{ Asset : "has assets"
-    AssetTemplate ||--o{ Asset : "defines"
+    RS --> ASS["Asset"]
+    ASST["AssetTemplate"] --> ASS
       </div>
     </div>
 
@@ -1138,69 +1138,73 @@ erDiagram
 </div>
 
 <script>
-function getMermaidTheme() {
-  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
-  return dark ? {
+var _diagramSources = {};
+var _rendered = {};
+
+function getMermaidConfig() {
+  var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return {
+    startOnLoad: false,
     theme: 'base',
-    themeVariables: {
+    themeVariables: dark ? {
       primaryColor: '#1e3a5f', primaryTextColor: '#f1f5f9',
       primaryBorderColor: '#00a1e0', lineColor: '#00a1e0',
-      secondaryColor: '#0d1424', tertiaryColor: '#0a0f1e',
-      background: '#0a0f1e', mainBkg: '#0d1424',
-      nodeBorder: '#00a1e0', clusterBkg: '#0d1424',
-      titleColor: '#f1f5f9', edgeLabelBackground: '#1e3a5f',
-      fontFamily: 'Segoe UI, system-ui, sans-serif',
-      attributeBackgroundColorOdd: '#0d1424',
-      attributeBackgroundColorEven: '#111827'
-    }
-  } : {
-    theme: 'base',
-    themeVariables: {
+      secondaryColor: '#111827', background: '#0a0f1e',
+      mainBkg: '#0d1424', nodeBorder: '#00a1e0',
+      edgeLabelBackground: '#1e3a5f', titleColor: '#f1f5f9',
+      fontFamily: 'Segoe UI, system-ui, sans-serif'
+    } : {
       primaryColor: '#dbeafe', primaryTextColor: '#0f172a',
       primaryBorderColor: '#0369a1', lineColor: '#0369a1',
-      secondaryColor: '#eff6ff', tertiaryColor: '#f0f4f8',
-      background: '#f0f4f8', mainBkg: '#ffffff',
-      nodeBorder: '#0369a1', clusterBkg: '#eff6ff',
-      titleColor: '#0f172a', edgeLabelBackground: '#dbeafe',
-      fontFamily: 'Segoe UI, system-ui, sans-serif',
-      attributeBackgroundColorOdd: '#ffffff',
-      attributeBackgroundColorEven: '#eff6ff'
+      secondaryColor: '#eff6ff', background: '#f0f4f8',
+      mainBkg: '#ffffff', nodeBorder: '#0369a1',
+      edgeLabelBackground: '#dbeafe', titleColor: '#0f172a',
+      fontFamily: 'Segoe UI, system-ui, sans-serif'
     }
   };
 }
 
-function initMermaid() {
-  mermaid.initialize({ startOnLoad: false, ...getMermaidTheme() });
-  mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+function renderDiagramInTab(tabId) {
+  var panel = document.getElementById('tab-' + tabId);
+  if (!panel) return;
+  var nodes = panel.querySelectorAll('.mermaid');
+  if (!nodes.length) return;
+  nodes.forEach(function(el) {
+    var id = el.id;
+    if (_rendered[id]) {
+      el.removeAttribute('data-processed');
+      el.innerHTML = _diagramSources[id] || '';
+    }
+    _rendered[id] = true;
+  });
+  mermaid.initialize(getMermaidConfig());
+  mermaid.run({ nodes: nodes });
 }
 
-const _originalToggle = window.toggleTheme;
-window.toggleTheme = function() {
-  if (_originalToggle) _originalToggle();
-  setTimeout(() => {
-    document.querySelectorAll('.mermaid').forEach(el => {
-      el.removeAttribute('data-processed');
-      el.innerHTML = el.getAttribute('data-src') || el.innerHTML;
-    });
-    initMermaid();
-  }, 50);
-};
-
-let _diagramsRendered = false;
 function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   document.getElementById('tab-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
-  if (!_diagramsRendered && (id === 'base' || id === 'enhanced')) {
-    _diagramsRendered = true;
-    initMermaid();
+  if (id === 'base' || id === 'enhanced') {
+    setTimeout(function() { renderDiagramInTab(id); }, 10);
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.mermaid').forEach(el => {
-    el.setAttribute('data-src', el.innerHTML);
+var _origToggle = window.toggleTheme;
+window.toggleTheme = function() {
+  if (_origToggle) _origToggle();
+  setTimeout(function() {
+    var active = document.querySelector('.tab-panel.active');
+    if (!active) return;
+    var id = active.id.replace('tab-', '');
+    if (id === 'base' || id === 'enhanced') renderDiagramInTab(id);
+  }, 60);
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.mermaid').forEach(function(el) {
+    _diagramSources[el.id] = el.innerHTML.trim();
   });
 });
 </script>
