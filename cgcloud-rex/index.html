@@ -375,34 +375,7 @@
       <div class="section-label">Entity Diagram — Base Model</div>
       <h2 class="card-title">Key objects and relationships</h2>
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Core objects grouped by process: store master data, product catalog, visit execution, and KPI framework.</p>
-      <div id="diagram-base" class="mermaid" style="background:transparent;">
-graph LR
-    ACC["Account"] --> RS["RetailStore"]
-    RS --> RLG["RetailLocationGroup"]
-    RS --> ISL["InStoreLocation"]
-
-    P2["Product2"] --> SP["StoreProduct"]
-    SP --> RS
-    ASS["Assortment"] --> SA["StoreAssortment"]
-    SA --> RS
-
-    PRO["Promotion"] --> PC["PromotionChannel"]
-    PC --> RS
-    PRO --> PP["PromotionProduct"]
-    PP --> P2
-
-    AID["AssessmentIndicatorDef"] --> RSKPI["RetailStoreKpi"]
-    RLG --> RSKPI
-    ATD["AssessmentTaskDef"] --> AID
-
-    APT["ActionPlanTemplate"] --> ATD
-    APT --> V["Visit"]
-    RS --> V
-    V --> AT["AssessmentTask"]
-    ATD --> AT
-    AT --> RVKPI["RetailVisitKpi"]
-    RSKPI --> RVKPI
-      </div>
+      <div id="diagram-base" class="mermaid"></div>
     </div>
 
   </div>
@@ -432,8 +405,8 @@ graph LR
       <ul class="feature-list">
         <li><strong style="color:var(--text);">Org Units and Org Unit Hierarchies</strong> — model your sales organization structure (Country → Region → District → Team). Each org unit maps to a set of customers and reps.</li>
         <li><strong style="color:var(--text);">Multi-Market with Sales Orgs</strong> — use separate Sales Orgs to segregate data and configure different business processes for different markets (e.g., different countries or brands).</li>
-        <li><strong style="color:var(--text);">Automatic rep-to-store assignment</strong> — instead of manual visit creation per store, the system assigns reps to their territory's stores automatically.</li>
-        <li><strong style="color:var(--text);">Substitute assignment</strong> — when a rep is absent, assign a substitute who inherits the same store assignments and visits temporarily.</li>
+        <li><strong style="color:var(--text);">Automatic rep-to-customer assignment</strong> — instead of manual visit creation per store, the system assigns reps to their territory's customers (accounts) automatically.</li>
+        <li><strong style="color:var(--text);">Substitute assignment</strong> — when a rep is absent, assign a substitute who inherits the same customer (account) assignments and visits temporarily.</li>
         <li><strong style="color:var(--text);">Team Supervisors</strong> — supervisors have role-based visibility into their team's daily activities, visits, and KPI performance.</li>
       </ul>
     </div>
@@ -443,7 +416,7 @@ graph LR
       <div class="section-label">What's new: Master Data Management</div>
       <h2 class="card-title">Customer and Product Data — editable from mobile</h2>
       <ul class="feature-list">
-        <li><strong style="color:var(--text);">Customer Templates</strong> — standardize the data model for customer records. Ensures consistency across all store records.</li>
+        <li><strong style="color:var(--text);">Customer Templates</strong> — standardize the data model for customer records. Ensures consistency across all customer (account) records.</li>
         <li><strong style="color:var(--text);">Customer Records with Roles</strong> — customers (accounts) can have roles like Orderer, defining who is authorized to place orders at that account.</li>
         <li><strong style="color:var(--text);">Customer Sets and Grouping</strong> — group customers for targeted business processes, promotions, or reporting.</li>
         <li><strong style="color:var(--text);">Time-dependent account and product hierarchies</strong> — account and product structures can change over time with effective dates, keeping historical accuracy.</li>
@@ -491,8 +464,8 @@ graph LR
         <li><strong style="color:var(--text);">End-of-Day sync</strong> — app uploads all captured data (KPIs, orders, survey responses, photos) to Salesforce.</li>
         <li><strong style="color:var(--text);">New UI flow</strong> — offline app has a new experience supporting: offline visit planning, advanced orders, sales folder, mobile links, CRM Analytics integration, editable master data, and personal settings.</li>
         <li><strong style="color:var(--text);">Advanced Visits (template-based)</strong> — created using job templates. Supports different visit types (audit, sales, delivery). GPS tracking enabled on advanced visits.</li>
-        <li><strong style="color:var(--text);">Map-based visit creation</strong> — supervisors and reps can create visits by selecting stores on a map. Salesforce Maps integration.</li>
-        <li><strong style="color:var(--text);">Trip Lists</strong> — optimized daily routes. Supervisor creates a trip list (ordered store sequence), rep follows the route on the mobile app.</li>
+        <li><strong style="color:var(--text);">Map-based visit creation</strong> — supervisors and reps can create visits by selecting accounts (customers) on a map. Salesforce Maps integration.</li>
+        <li><strong style="color:var(--text);">Trip Lists</strong> — optimized daily routes. Supervisor creates a trip list (ordered account sequence), rep follows the route on the mobile app.</li>
         <li><strong style="color:var(--text);">Create Visits from Job Lists</strong> — auto-create visits from predefined job lists, reducing manual planning effort.</li>
         <li><strong style="color:var(--text);">Barcode scan to create visits</strong> — scan a store barcode to instantly create a visit for that store.</li>
       </ul>
@@ -567,7 +540,7 @@ graph LR
           <ul class="feature-list">
             <li>Agents run on the Consumer Goods Cloud mobile and desktop apps</li>
             <li>Generate account and visit insights automatically before a visit</li>
-            <li>Suggest which products and promotions to highlight for a specific store</li>
+            <li>Suggest which products and promotions to highlight for a specific account</li>
             <li>Automatically create visits based on patterns and recommendations</li>
             <li>Streamline key tasks via natural language in the mobile app</li>
           </ul>
@@ -585,9 +558,9 @@ graph LR
       </div>
       <div class="sub-heading">Einstein Visit Recommendations</div>
       <ul class="feature-list">
-        <li>Assists sales managers and field reps in identifying which stores to prioritize for field visits</li>
-        <li>Analyzes visit history, KPI trends, and sales data to surface high-priority stores</li>
-        <li>Enhances efficiency by focusing field time on stores with the most business impact</li>
+        <li>Assists sales managers and field reps in identifying which accounts to prioritize for field visits</li>
+        <li>Analyzes visit history, KPI trends, and sales data to surface high-priority accounts</li>
+        <li>Enhances efficiency by focusing field time on accounts with the most business impact</li>
         <li>Requires setup and scheduling via the Visit Recommendations configuration</li>
       </ul>
     </div>
@@ -641,32 +614,7 @@ graph LR
       <div class="section-label">Entity Diagram — Enhanced Model</div>
       <h2 class="card-title">New objects and how they connect to the base layer</h2>
       <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Shows Enhanced-only objects (territory, advanced orders, advanced promotions, offline visits) and how they extend the base model relationships.</p>
-      <div id="diagram-enhanced" class="mermaid" style="background:transparent;">
-graph LR
-    OU["OrgUnit"] --> OU
-    OU --> ACC["Account"]
-    ACC --> RS["RetailStore"]
-
-    CT["CustomerTemplate"] --> ACC
-    AL["AuthorizationList"] --> LM["ListingModule"]
-    LM --> ACC
-    ACC --> AO["AdvancedOrder"]
-    P2["Product2"] --> AO
-
-    AP["AdvancedPromotion"] --> PT["PromotionTactic"]
-    PT --> P2
-    AP --> ACC
-
-    JT["JobTemplate"] --> JDT["JobDefTemplate"]
-    JDT --> ACT["ActivityTemplate"]
-    JT --> V["Visit"]
-    TL["TripList"] --> V
-    V --> CUT["CustomerTask"]
-    CTT["CustomerTaskTemplate"] --> CUT
-
-    RS --> ASS["Asset"]
-    ASST["AssetTemplate"] --> ASS
-      </div>
+      <div id="diagram-enhanced" class="mermaid"></div>
     </div>
 
   </div>
@@ -765,13 +713,13 @@ graph LR
             <td>Substitute rep assignment</td>
             <td><span class="cross">✗</span></td>
             <td><span class="check">✓</span></td>
-            <td>When a rep is sick, a substitute inherits their stores and visits for the day. No manual reassignment.</td>
+            <td>When a rep is sick, a substitute inherits their customer accounts and visits for the day. No manual reassignment.</td>
           </tr>
           <tr>
             <td>Trip lists (optimized routes)</td>
             <td><span class="cross">✗</span></td>
             <td><span class="check">✓</span></td>
-            <td>Supervisor creates an optimized store sequence for the day. Reduces drive time between stores.</td>
+            <td>Supervisor creates an optimized account/customer sequence for the day. Reduces drive time between accounts.</td>
           </tr>
           <tr>
             <td><strong>Penny Perfect Pricing</strong></td>
@@ -1107,7 +1055,7 @@ graph LR
             <tr style="background:rgba(134,239,172,0.03);">
               <td style="font-family:monospace;font-size:0.82rem;">TripList</td>
               <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
-              <td>An optimized daily store route. Supervisor defines the ordered sequence of stores; rep follows it on the mobile app.</td>
+              <td>An optimized daily route. Supervisor defines the ordered sequence of customer accounts; rep follows it on the mobile app.</td>
             </tr>
             <tr style="background:rgba(134,239,172,0.03);">
               <td style="font-family:monospace;font-size:0.82rem;">AuthorizationList</td>
@@ -1138,74 +1086,110 @@ graph LR
 </div>
 
 <script>
-var _diagramSources = {};
-var _rendered = {};
+const DIAGRAM_BASE = `flowchart LR
+    ACC([Account]) --> RS([RetailStore])
+    RS --> RLG([RetailLocationGroup])
+    RS --> ISL([InStoreLocation])
 
-function getMermaidConfig() {
-  var dark = document.documentElement.getAttribute('data-theme') !== 'light';
-  return {
-    startOnLoad: false,
-    theme: 'base',
-    themeVariables: dark ? {
-      primaryColor: '#1e3a5f', primaryTextColor: '#f1f5f9',
-      primaryBorderColor: '#00a1e0', lineColor: '#00a1e0',
-      secondaryColor: '#111827', background: '#0a0f1e',
-      mainBkg: '#0d1424', nodeBorder: '#00a1e0',
-      edgeLabelBackground: '#1e3a5f', titleColor: '#f1f5f9',
-      fontFamily: 'Segoe UI, system-ui, sans-serif'
-    } : {
-      primaryColor: '#dbeafe', primaryTextColor: '#0f172a',
-      primaryBorderColor: '#0369a1', lineColor: '#0369a1',
-      secondaryColor: '#eff6ff', background: '#f0f4f8',
-      mainBkg: '#ffffff', nodeBorder: '#0369a1',
-      edgeLabelBackground: '#dbeafe', titleColor: '#0f172a',
-      fontFamily: 'Segoe UI, system-ui, sans-serif'
-    }
-  };
-}
+    P2([Product2]) --> SP([StoreProduct])
+    SP --> RS
+    ASS([Assortment]) --> SA([StoreAssortment])
+    SA --> RS
 
-function renderDiagramInTab(tabId) {
-  var panel = document.getElementById('tab-' + tabId);
-  if (!panel) return;
-  var nodes = panel.querySelectorAll('.mermaid');
-  if (!nodes.length) return;
-  nodes.forEach(function(el) {
-    var id = el.id;
-    if (_rendered[id]) {
-      el.removeAttribute('data-processed');
-      el.innerHTML = _diagramSources[id] || '';
-    }
-    _rendered[id] = true;
-  });
-  mermaid.initialize(getMermaidConfig());
-  mermaid.run({ nodes: nodes });
-}
+    PRO([Promotion]) --> PC([PromotionChannel])
+    PC --> RS
+    PRO --> PP([PromotionProduct])
+    PP --> P2
 
-function switchTab(id, btn) {
-  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-  document.getElementById('tab-' + id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (id === 'base' || id === 'enhanced') {
-    setTimeout(function() { renderDiagramInTab(id); }, 10);
-  }
-}
+    AID([AssessmentIndicatorDef]) --> RSKPI([RetailStoreKpi])
+    RLG --> RSKPI
+    ATD([AssessmentTaskDef]) --> AID
 
-var _origToggle = window.toggleTheme;
-window.toggleTheme = function() {
-  if (_origToggle) _origToggle();
-  setTimeout(function() {
-    var active = document.querySelector('.tab-panel.active');
-    if (!active) return;
-    var id = active.id.replace('tab-', '');
-    if (id === 'base' || id === 'enhanced') renderDiagramInTab(id);
-  }, 60);
+    APT([ActionPlanTemplate]) --> ATD
+    APT --> V([Visit])
+    RS --> V
+    V --> AT([AssessmentTask])
+    ATD --> AT
+    AT --> RVKPI([RetailVisitKpi])
+    RSKPI --> RVKPI`;
+
+const DIAGRAM_ENHANCED = `flowchart LR
+    OU([OrgUnit]) --> OU
+    OU --> ACC([Account])
+
+    CT([CustomerTemplate]) --> ACC
+    AL([AuthorizationList]) --> LM([ListingModule])
+    LM --> ACC
+    ACC --> AO([AdvancedOrder])
+    P2([Product2]) --> AO
+
+    AP([AdvancedPromotion]) --> PT([PromotionTactic])
+    PT --> P2
+    AP --> ACC
+
+    JT([JobTemplate]) --> JDT([JobDefTemplate])
+    JDT --> ACT([ActivityTemplate])
+    JT --> V([Visit])
+    TL([TripList]) --> V
+    ACC --> V
+    V --> CUT([CustomerTask])
+    CTT([CustomerTaskTemplate]) --> CUT
+
+    ACC --> ASS([Asset])
+    ASST([AssetTemplate]) --> ASS`;
+
+const DARK_VARS = {
+  primaryColor: '#1e3a5f', primaryTextColor: '#e2e8f0',
+  primaryBorderColor: '#00a1e0', lineColor: '#00a1e0',
+  secondaryColor: '#0d1424', tertiaryColor: '#0a0f1e',
+  background: '#0a0f1e', mainBkg: '#0d1424',
+  nodeBorder: '#00a1e0', clusterBkg: '#0d1424',
+  titleColor: '#e2e8f0', edgeLabelBackground: '#0d1424',
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.mermaid').forEach(function(el) {
-    _diagramSources[el.id] = el.innerHTML.trim();
+const LIGHT_VARS = {
+  primaryColor: '#dbeafe', primaryTextColor: '#0f172a',
+  primaryBorderColor: '#0369a1', lineColor: '#0369a1',
+  secondaryColor: '#f0f9ff', tertiaryColor: '#f0f4f8',
+  background: '#f0f4f8', mainBkg: '#ffffff',
+  nodeBorder: '#0369a1', clusterBkg: '#f0f9ff',
+  titleColor: '#0f172a', edgeLabelBackground: '#ffffff',
+};
+
+function getMermaidTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
+}
+function getMermaidVars() {
+  return document.documentElement.getAttribute('data-theme') === 'light' ? LIGHT_VARS : DARK_VARS;
+}
+
+async function renderDiagram(id, source) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.removeAttribute('data-processed');
+  el.innerHTML = source;
+  mermaid.initialize({ startOnLoad: false, theme: getMermaidTheme(), themeVariables: getMermaidVars() });
+  await mermaid.run({ nodes: [el] });
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (tabId === 'base')     setTimeout(() => renderDiagram('diagram-base', DIAGRAM_BASE), 50);
+  if (tabId === 'enhanced') setTimeout(() => renderDiagram('diagram-enhanced', DIAGRAM_ENHANCED), 50);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new MutationObserver(() => {
+    const active = document.querySelector('.tab-panel.active');
+    if (!active) return;
+    const id = active.id.replace('tab-', '');
+    if (id === 'base')     renderDiagram('diagram-base', DIAGRAM_BASE);
+    if (id === 'enhanced') renderDiagram('diagram-enhanced', DIAGRAM_ENHANCED);
   });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 });
 </script>
 
