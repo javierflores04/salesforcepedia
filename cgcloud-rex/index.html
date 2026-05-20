@@ -826,6 +826,245 @@
       </div>
     </div>
 
+    <!-- Data Model Objects -->
+    <div class="card">
+      <div class="section-label">Data Model Objects</div>
+      <h2 class="card-title">All objects used by Retail Execution — by model layer</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">
+        Three tiers: standard Salesforce objects (no CG license needed), objects that come with the CG Cloud license (Base), and objects only available with the Enhanced managed package.
+      </p>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
+        <span style="font-size:0.78rem;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);">SF — Standard Salesforce</span>
+        <span style="font-size:0.78rem;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);">Base — CG Cloud license</span>
+        <span style="font-size:0.78rem;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);">Enhanced — managed package</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th style="width:30%">Object</th>
+              <th style="width:14%">Model</th>
+              <th>What it stores / what it's for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Standard SF -->
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">Account</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Retail business partner — the chain or customer account that owns one or more stores.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">Product2</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>One record per SKU / sellable unit. Tied to a Price Book for list price.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">Pricebook2 / PricebookEntry</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Price list and per-product price. One PricebookEntry per product per price book.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">Order / OrderItem</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Replenishment orders taken by the field rep at the store during a visit.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">ActionPlanTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Reusable visit checklist framework. Contains ordered tasks for a given visit type.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">Shipment</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Represents transport of inventory between locations (e.g., warehouse to store).</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">ProductItem</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Inventory assigned to a specific location. For a van, the van is a moving location.</td>
+            </tr>
+            <tr style="background:rgba(148,163,184,0.04);">
+              <td style="font-family:monospace;font-size:0.82rem;">ProductTransfer</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(148,163,184,0.12);color:var(--muted);border:1px solid rgba(148,163,184,0.25);white-space:nowrap;">SF</span></td>
+              <td>Represents a transfer of inventory between two locations (e.g., van to store shelf).</td>
+            </tr>
+
+            <!-- Base CG Cloud -->
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">RetailStore</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>The physical store — billing info, timezone, operating hours, preferred visit windows.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">RetailLocationGroup</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Groups stores by size, region, or product type. KPI targets are set at this level, not per individual store.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">InStoreLocation</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Specific location inside a store: aisle, endcap, checkout counter, refrigerator section.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">StoreProduct</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Associates a product to a retail store or to a specific in-store location.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">Assortment</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>List of products eligible for sale at a store, store group, or account.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssortmentProduct</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Junction: product ↔ assortment association.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">StoreAssortment</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Associates an assortment to a store, store group, or account.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">Promotion</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>A campaign or targeted promotion. Has category, level (product/category), and method (discount, display, sampling).</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">PromotionChannel</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Associates a promotion to a store/group/account with validity dates and optional in-store location.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">PromotionProduct</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Ties a promotion to a specific product SKU.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">PromotionProductCategory</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Ties a promotion to a product category instead of a specific SKU.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentIndicatorDefinition</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Defines a KPI metric to capture (Facing, Share of Shelf, Out of Stock, Inventory, Price, Revenue). Data type: Number, Boolean, Decimal, Text, DateTime.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">RetailStoreKpi</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Target value for an AID at a store group. Links store group + AID + product/promotion/planogram + expected value.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">RetailVisitKpi</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Actual value captured during a visit. Auto-created when a rep submits a task. Stores actual vs target.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentTaskDefinition</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Template for a field task: name, description, category, type (Inventory Check, Planogram Check, Promotion Check, Order Creation, Survey, Custom).</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentTask</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Instance of a task executed by a rep at a store during a visit.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentTaskIndDefinition</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Junction: associates an AssessmentTaskDefinition to an AssessmentIndicatorDefinition.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentTaskOrder</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Order activity linked to an assessment task — the actual order the rep creates during the visit.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">AssessmentTaskContentDocument</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Junction object that associates content documents (photos, files) to visits, tasks, promotions, or planograms.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">StoreActionPlanTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Associates an action plan template to a specific retail store.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">Visit</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Core object — tracks each field rep visit to a retail store: scheduled time, actual time, status, assigned rep, associated tasks.</td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:0.82rem;">DeliveryTask</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(0,161,224,0.12);color:var(--accent);border:1px solid rgba(0,161,224,0.3);white-space:nowrap;">Base</span></td>
+              <td>Delivery task added to an action plan template — defines what products must be delivered during a visit.</td>
+            </tr>
+
+            <!-- Enhanced Only -->
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">OrgUnit</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Organizational unit in the sales hierarchy (Country → Region → District → Team). Used for territory management and data segregation.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">JobTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Defines a type of advanced visit (e.g., "Standard Audit", "New Product Launch"). The advanced-model equivalent of ActionPlanTemplate.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">JobDefinitionTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Specifies the tasks and activities associated to a job template. Assigned to activity templates for modular composition.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">ActivityTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Script for an individual activity within a job. Contains the step-by-step instructions for a specific in-store task.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">CustomerTask</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Ad-hoc simple task created by a rep during a visit (e.g., "check refrigerator temperature", "meet store manager").</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">CustomerTaskTemplate</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Reusable template for creating customer tasks. Defined by the supervisor, used by reps in the field.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">TripList</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>An optimized daily store route. Supervisor defines the ordered sequence of stores; rep follows it on the mobile app.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">AuthorizationList</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Defines which products a specific customer is authorized to order. Prevents reps from selling unlisted SKUs to an account.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">ListingModule</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Module that groups authorization lists. Used with advanced orders to control exactly what each customer can purchase.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">AdvancedPromotion</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Promotion with a full lifecycle: Planning → ForApproval → Committed. Supports lock status, copy, slogan, anchor customer, in-store date.</td>
+            </tr>
+            <tr style="background:rgba(134,239,172,0.03);">
+              <td style="font-family:monospace;font-size:0.82rem;">PromotionTactic</td>
+              <td><span style="font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(134,239,172,0.12);color:var(--green);border:1px solid rgba(134,239,172,0.3);white-space:nowrap;">Enhanced</span></td>
+              <td>Individual tactic within an advanced promotion (e.g., "end-cap display", "price reduction", "sampling session") with its own products and targets.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
