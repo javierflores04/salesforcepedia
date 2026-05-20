@@ -9,6 +9,7 @@
   <meta name="description" content="Consumer Goods Cloud Retail Execution: Base Model vs Enhanced Model comparison — visit planning, in-store execution, offline mobile, territory management, advanced orders, and Agentforce.">
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="css/theme.css">
+  <script src="../vendor/mermaid/mermaid.min.js"></script>
 </head>
 <body>
 
@@ -369,6 +370,41 @@
       </div>
     </div>
 
+    <!-- Base Model Diagram -->
+    <div class="card">
+      <div class="section-label">Entity Diagram — Base Model</div>
+      <h2 class="card-title">Key objects and relationships</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Core objects grouped by process: store master data, product catalog, visit execution, and KPI framework.</p>
+      <div id="diagram-base" class="mermaid" style="background:transparent;">
+erDiagram
+    Account ||--o{ RetailStore : "has stores"
+    RetailStore }o--|| RetailLocationGroup : "belongs to"
+    RetailStore ||--o{ InStoreLocation : "has locations"
+    RetailStore ||--o{ StoreProduct : "carries"
+    Product2 ||--o{ StoreProduct : "placed at"
+    Product2 ||--o{ AssortmentProduct : "included in"
+    Assortment ||--o{ AssortmentProduct : "contains"
+    Assortment ||--o{ StoreAssortment : "assigned via"
+    RetailStore ||--o{ StoreAssortment : "has assortments"
+
+    Promotion ||--o{ PromotionChannel : "runs at"
+    RetailStore ||--o{ PromotionChannel : "hosts"
+    Promotion ||--o{ PromotionProduct : "covers"
+    Product2 ||--o{ PromotionProduct : "featured in"
+
+    ActionPlanTemplate ||--o{ AssessmentTaskDefinition : "includes"
+    AssessmentIndicatorDefinition ||--o{ AssessmentTaskDefinition : "measured by"
+    RetailLocationGroup ||--o{ RetailStoreKpi : "targets defined for"
+    AssessmentIndicatorDefinition ||--o{ RetailStoreKpi : "defines metric"
+
+    Visit ||--o{ AssessmentTask : "contains"
+    AssessmentTaskDefinition ||--o{ AssessmentTask : "instantiated as"
+    AssessmentTask ||--o{ RetailVisitKpi : "captures"
+    RetailStoreKpi ||--o{ RetailVisitKpi : "compared against"
+    ActionPlanTemplate ||--o{ Visit : "applied to"
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -597,6 +633,39 @@
         <span class="pill">Shipment</span>
         <span class="pill">ProductItem</span>
         <span class="pill">ProductTransfer</span>
+      </div>
+    </div>
+
+    <!-- Enhanced Model Diagram -->
+    <div class="card">
+      <div class="section-label">Entity Diagram — Enhanced Model</div>
+      <h2 class="card-title">New objects and how they connect to the base layer</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">Shows Enhanced-only objects (territory, advanced orders, advanced promotions, offline visits) and how they extend the base model relationships.</p>
+      <div id="diagram-enhanced" class="mermaid" style="background:transparent;">
+erDiagram
+    OrgUnit ||--o{ OrgUnit : "parent of"
+    OrgUnit ||--o{ Account : "owns"
+    Account ||--o{ RetailStore : "has stores"
+
+    CustomerTemplate ||--o{ Account : "standardizes"
+    AuthorizationList ||--o{ ListingModule : "grouped in"
+    ListingModule ||--o{ Account : "assigned to"
+    Account ||--o{ AdvancedOrder : "orders via"
+    Product2 ||--o{ AdvancedOrder : "ordered in"
+
+    AdvancedPromotion ||--o{ PromotionTactic : "broken into"
+    PromotionTactic ||--o{ Product2 : "targets"
+    AdvancedPromotion ||--o{ Account : "planned for"
+
+    JobTemplate ||--o{ JobDefinitionTemplate : "contains"
+    JobDefinitionTemplate ||--o{ ActivityTemplate : "uses"
+    JobTemplate ||--o{ Visit : "drives"
+    TripList ||--o{ Visit : "sequences"
+    Visit ||--o{ CustomerTask : "has"
+    CustomerTaskTemplate ||--o{ CustomerTask : "instantiated as"
+
+    RetailStore ||--o{ Asset : "has assets"
+    AssetTemplate ||--o{ Asset : "defines"
       </div>
     </div>
 
@@ -1069,12 +1138,71 @@
 </div>
 
 <script>
+function getMermaidTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return dark ? {
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#1e3a5f', primaryTextColor: '#f1f5f9',
+      primaryBorderColor: '#00a1e0', lineColor: '#00a1e0',
+      secondaryColor: '#0d1424', tertiaryColor: '#0a0f1e',
+      background: '#0a0f1e', mainBkg: '#0d1424',
+      nodeBorder: '#00a1e0', clusterBkg: '#0d1424',
+      titleColor: '#f1f5f9', edgeLabelBackground: '#1e3a5f',
+      fontFamily: 'Segoe UI, system-ui, sans-serif',
+      attributeBackgroundColorOdd: '#0d1424',
+      attributeBackgroundColorEven: '#111827'
+    }
+  } : {
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#dbeafe', primaryTextColor: '#0f172a',
+      primaryBorderColor: '#0369a1', lineColor: '#0369a1',
+      secondaryColor: '#eff6ff', tertiaryColor: '#f0f4f8',
+      background: '#f0f4f8', mainBkg: '#ffffff',
+      nodeBorder: '#0369a1', clusterBkg: '#eff6ff',
+      titleColor: '#0f172a', edgeLabelBackground: '#dbeafe',
+      fontFamily: 'Segoe UI, system-ui, sans-serif',
+      attributeBackgroundColorOdd: '#ffffff',
+      attributeBackgroundColorEven: '#eff6ff'
+    }
+  };
+}
+
+function initMermaid() {
+  mermaid.initialize({ startOnLoad: false, ...getMermaidTheme() });
+  mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+}
+
+const _originalToggle = window.toggleTheme;
+window.toggleTheme = function() {
+  if (_originalToggle) _originalToggle();
+  setTimeout(() => {
+    document.querySelectorAll('.mermaid').forEach(el => {
+      el.removeAttribute('data-processed');
+      el.innerHTML = el.getAttribute('data-src') || el.innerHTML;
+    });
+    initMermaid();
+  }, 50);
+};
+
+let _diagramsRendered = false;
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
+  if (!_diagramsRendered && (id === 'base' || id === 'enhanced')) {
+    _diagramsRendered = true;
+    initMermaid();
+  }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.mermaid').forEach(el => {
+    el.setAttribute('data-src', el.innerHTML);
+  });
+});
 </script>
 
 </body>
