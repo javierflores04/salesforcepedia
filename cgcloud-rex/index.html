@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script src="../js/theme.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGCloud Retail Execution — Salesforcepedia</title>
+  <meta name="description" content="Consumer Goods Cloud Retail Execution: Base Model vs Enhanced Model comparison — visit planning, in-store execution, offline mobile, territory management, advanced orders, and Agentforce.">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html" class="brand">Salesforce<span>pedia</span></a>
+  <a href="../index.html" class="nav-link">Home</a>
+  <a href="#" class="nav-link active">CGCloud REX</a>
+  <span class="badge">INDUSTRIES</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+</nav>
+
+<a href="../index.html" class="back-link">← Back to Home</a>
+
+<div class="page-hero" style="padding-left:0;padding-right:0;">
+  <div style="max-width:1200px;margin:0 auto;padding:0 48px;">
+    <div class="eyebrow">Consumer Goods Cloud — Retail Execution</div>
+    <h1>Base Model · Enhanced Model · Use Case · Feature Comparison</h1>
+    <p>A structured reference for implementing Retail Execution in CGCloud — from the standard Base Model to the full Enhanced Model with offline mobile, territory management, and advanced orders.</p>
+  </div>
+</div>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('usecase', this)">🏪 Use Case</button>
+  <button class="tab-btn" onclick="switchTab('base', this)">🔵 Base Model</button>
+  <button class="tab-btn" onclick="switchTab('enhanced', this)">⚡ Enhanced Model</button>
+  <button class="tab-btn" onclick="switchTab('compare', this)">⚖️ Comparison</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1: USE CASE
+     ══════════════════════════════════════════════ -->
+<div id="tab-usecase" class="tab-panel active">
+  <div class="content-wrap">
+
+    <!-- Scenario intro -->
+    <div class="card">
+      <div class="section-label">Scenario</div>
+      <h2 class="card-title">SnackCo Field Force — Consumer Goods Retail Execution</h2>
+      <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:860px;">
+        <strong style="color:var(--text);">SnackCo</strong> is a mid-size consumer goods company that distributes snacks and beverages across hundreds of retail stores (supermarkets, convenience stores, gas stations). They have a field sales team whose core job is to visit stores regularly to audit shelf presence, take replenishment orders, verify promotions, and ensure brand standards are met.
+      </p>
+      <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;max-width:860px;margin-top:12px;">
+        The question is: <strong style="color:var(--text);">how do you implement this with CGCloud Retail Execution?</strong> This module walks through the same use case solved first with the <strong style="color:var(--accent);">Base Model</strong> — then shows how the <strong style="color:var(--accent);">Enhanced Model</strong> addresses the limitations.
+      </p>
+    </div>
+
+    <!-- Actors -->
+    <div class="card">
+      <div class="section-label">Actors</div>
+      <h2 class="card-title" style="margin-bottom:4px;">Who is involved</h2>
+      <div class="actor-grid">
+        <div class="actor-card">
+          <div class="actor-icon">🛠️</div>
+          <div class="actor-name">Admin</div>
+          <div class="actor-desc">Configures the org: stores, products, KPIs, task definitions, permission sets, sync management.</div>
+        </div>
+        <div class="actor-card">
+          <div class="actor-icon">👔</div>
+          <div class="actor-name">Sales Manager / Supervisor</div>
+          <div class="actor-desc">Plans visits, defines action plan templates, assigns reps to routes, monitors compliance dashboards.</div>
+        </div>
+        <div class="actor-card">
+          <div class="actor-icon">🚗</div>
+          <div class="actor-name">Field Rep (Sales Rep)</div>
+          <div class="actor-desc">Executes store visits: checks inventory, verifies promotions, audits planograms, takes orders, captures signatures.</div>
+        </div>
+        <div class="actor-card">
+          <div class="actor-icon">🏪</div>
+          <div class="actor-name">Store Manager</div>
+          <div class="actor-desc">Retail store contact. Signs off on orders. Not a Salesforce user — interacts only via signature capture.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Business problem -->
+    <div class="card">
+      <div class="section-label">Business Problem</div>
+      <h2 class="card-title">What SnackCo needs to solve</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="border:none;margin-top:0;font-size:0.88rem;color:var(--muted);font-weight:600;">Without Retail Execution</div>
+          <ul class="limit-list">
+            <li>Visit schedules tracked in spreadsheets — no visibility into who visited which store</li>
+            <li>Field reps write down inventory manually — data arrives late or never</li>
+            <li>No way to know if promotions are actually in store on the right date</li>
+            <li>Orders via phone/email — slow, error-prone</li>
+            <li>Supervisors have no real-time view of field activity</li>
+            <li>No store compliance tracking — can't calculate KPIs like Share of Shelf or Out of Stock %</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="border:none;margin-top:0;font-size:0.88rem;color:var(--muted);font-weight:600;">With Retail Execution (CGCloud)</div>
+          <ul class="addon-list">
+            <li>Structured visit plans — who goes where, when, with what checklist</li>
+            <li>Field reps execute tasks in the Salesforce app — data captured in real-time</li>
+            <li>KPIs (Facing, Share of Shelf, OOS, Inventory) tracked per store visit</li>
+            <li>Promotions associated to specific stores — reps verify compliance</li>
+            <li>Orders taken digitally — signature capture releases order immediately</li>
+            <li>Supervisors see compliance dashboards and visit history</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field rep day flow -->
+    <div class="card">
+      <div class="section-label">Field Rep Day — End-to-End Flow</div>
+      <h2 class="card-title">From Start of Day to End of Day</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;">This is the core workflow REX enables for a field rep in both models. The execution channel differs (online app vs offline mobile app) but the logical flow is the same.</p>
+
+      <div class="flow-row">
+        <div class="flow-step accent">☀️ Start of Day</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Review visit list &amp; route</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Check vehicle inventory</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step accent">🏪 Arrive at Store</div>
+      </div>
+
+      <div class="flow-row" style="margin-top:0;">
+        <div class="flow-step">Open visit &amp; task list</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">✅ Inventory Check</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">📋 Planogram Check</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">🎯 Promotion Check</div>
+      </div>
+
+      <div class="flow-row" style="margin-top:0;">
+        <div class="flow-step">📦 Place Order</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">✍️ Capture Signature</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Close visit</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step accent">🌙 End of Day</div>
+      </div>
+
+      <div class="flow-row" style="margin-top:0;">
+        <div class="flow-step">Sync data to Salesforce</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Submit daily report</div>
+      </div>
+
+      <div class="callout info" style="margin-top:24px;">
+        <strong>Key difference between Base and Enhanced:</strong> In the Base Model, all of this happens online via the Salesforce Lightning app. In the Enhanced Model, field reps work <strong>offline</strong> on the Consumer Goods Cloud mobile app — syncing data at start and end of day, which is critical when stores have poor connectivity.
+      </div>
+    </div>
+
+    <!-- What each model solves -->
+    <div class="card">
+      <div class="section-label">Summary</div>
+      <h2 class="card-title">Base Model vs Enhanced Model — when to choose</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;">🔵 Choose Base Model when…</div>
+          <ul class="feature-list">
+            <li>Field reps always have reliable internet connectivity in store</li>
+            <li>Store count is manageable without territory management</li>
+            <li>Pricing is straightforward — no complex discount rules by customer</li>
+            <li>Promotions are simple (no approval workflows)</li>
+            <li>You want a quick deployment with standard Salesforce setup</li>
+            <li>Budget is limited — base model uses standard CG Cloud license</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;">⚡ Choose Enhanced Model when…</div>
+          <ul class="feature-list">
+            <li>Field reps visit stores with poor or no connectivity</li>
+            <li>You have large field teams across multiple territories</li>
+            <li>Pricing varies by customer — need Penny Perfect Pricing</li>
+            <li>Promotions require approval and lifecycle management (TPM)</li>
+            <li>You need advanced analytics (CRM Analytics / CRMA)</li>
+            <li>Agentforce AI features are part of the roadmap</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2: BASE MODEL
+     ══════════════════════════════════════════════ -->
+<div id="tab-base" class="tab-panel">
+  <div class="content-wrap">
+
+    <div class="card">
+      <div class="section-label">Base Model Overview</div>
+      <h2 class="card-title">Consumer Goods Cloud — Standard Retail Execution</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.8;max-width:860px;">
+        The Base Model uses the standard CG Cloud data model built on native Salesforce objects. No managed package required beyond the CGCloud license. Field reps use the standard Salesforce mobile app or browser — an active internet connection is required at all times.
+      </p>
+      <div class="callout info" style="margin-top:16px;">
+        Available in: <strong>Professional, Enterprise, and Unlimited</strong> Editions with Consumer Goods Cloud enabled.
+      </div>
+    </div>
+
+    <!-- Setup: Admin -->
+    <div class="card">
+      <div class="section-label">Setup — Admin</div>
+      <h2 class="card-title">What the Admin configures</h2>
+
+      <div class="sub-heading">1. Store Master Data</div>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">RetailStore</strong> — one record per physical store. Stores billing info, timezone, operating hours, preferred visit windows.</li>
+        <li><strong style="color:var(--text);">In-Store Locations</strong> — aisles, endcaps, checkout counters. Each location must be tied to an In-Store Location Category to link it to RSKPIs.</li>
+        <li><strong style="color:var(--text);">RetailLocationGroup</strong> — group stores by size, region, or product type. KPIs are defined at the store group level (not individual store).</li>
+        <li><strong style="color:var(--text);">Operating Hours + Time Slots</strong> — define business hours and preferred visit windows per store.</li>
+      </ul>
+
+      <div class="sub-heading">2. Product Catalog</div>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Product2</strong> — standard Salesforce Product object. Each product is a SKU.</li>
+        <li><strong style="color:var(--text);">StoreProduct</strong> — associates a product to a specific retail store or in-store location.</li>
+        <li><strong style="color:var(--text);">Assortment + AssortmentProduct</strong> — define product lists eligible for sale at a store, store group, or account.</li>
+        <li><strong style="color:var(--text);">Price Book</strong> — standard Salesforce Price Book stores list prices. Associated to Product2 via Price Book Entry.</li>
+      </ul>
+
+      <div class="sub-heading">3. Promotions</div>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Promotion</strong> — a campaign or targeted promotion to run at retail stores. Has category (advertising, sales promotion, publicity), level (product, product category, none), and method (discounts, displays, sampling).</li>
+        <li><strong style="color:var(--text);">PromotionChannel</strong> — associates a promotion to a specific store, store group, or account, with a date range and optional in-store location.</li>
+        <li><strong style="color:var(--text);">PromotionProduct / PromotionProductCategory</strong> — ties the promotion to specific SKUs or product categories.</li>
+      </ul>
+
+      <div class="sub-heading">4. KPI Framework</div>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Assessment Indicator Definition (AID)</strong> — defines a KPI metric. Types: Number, Boolean, DateTime, Text, Decimal. KPI types include: Facing, Share of Shelf, Out of Stock, Inventory, Price, Revenue.</li>
+        <li><strong style="color:var(--text);">Retail Store KPI (RSKPI)</strong> — links an AID to a store group (not individual store), product/promotion/planogram, and defines the target value. KPIs can't be set at the store level — only at store group level.</li>
+        <li><strong style="color:var(--text);">Retail Visit KPI</strong> — auto-created when a field rep captures an actual value during a visit. Stores actual vs target.</li>
+      </ul>
+
+      <div class="sub-heading">5. Assessment Task Definitions</div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px;">Each task type enables a different in-store activity. An assessment task definition holds name, description, category, and task type.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">✅ Inventory Check</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Track product availability, facings, share of shelf, OOS status at in-store locations.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">📋 Planogram Check</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Verify shelf layout against reference images. Upload photos from store, compare to planogram.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">🎯 Promotion Check</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Audit current promotions — verify they are in store and ready for upcoming promotions.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">📦 Order Creation</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Reorder previous orders or take fresh orders. Can order all available products, specific assortments, or favorites.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">📝 In-Store Survey</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Conduct surveys with store staff or consumers using Salesforce Feedback Management.</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text);margin-bottom:6px;">🔧 Custom (Other)</div>
+          <div style="font-size:0.8rem;color:var(--muted);">Custom tasks built on any Salesforce object with the HasActivities attribute enabled.</div>
+        </div>
+      </div>
+
+      <div class="sub-heading">6. Action Plan Templates</div>
+      <ul class="feature-list">
+        <li>Reusable visit checklists — define the ordered list of tasks a rep performs at every visit of a given type.</li>
+        <li>Set Target Object = Visit, Action Plan Type = Assessment Execution.</li>
+        <li>Add tasks (Inventory Check, Planogram Check, etc.) with Is Required flag and Display Order.</li>
+        <li>Must be Published before use — published templates cannot be edited.</li>
+        <li>One Action Plan Template can be associated to multiple visits. You can add multiple Inventory Check, Planogram Check, and Promotion Check tasks, but only one Order Creation or In-Store Survey per template.</li>
+      </ul>
+    </div>
+
+    <!-- Planning: Supervisor -->
+    <div class="card">
+      <div class="section-label">Visit Planning — Supervisor / Sales Manager</div>
+      <h2 class="card-title">How visits are planned in the Base Model</h2>
+      <ul class="feature-list">
+        <li>Create visits manually in Salesforce Lightning — one by one, or in bulk using the Retail Execution app.</li>
+        <li>Assign the field rep and the Action Plan Template to each visit.</li>
+        <li>Associate the visit to a specific RetailStore.</li>
+        <li>Set the scheduled date and time window.</li>
+        <li>Optional: use <strong style="color:var(--text);">Einstein Visit Recommendations</strong> (basic) — requires setup and configuration to suggest which stores to prioritize.</li>
+      </ul>
+      <div class="callout warn">
+        <strong>Base Model limitation:</strong> There is no territory management. Supervisors must manually assign reps to stores. For large teams with hundreds of stores, this becomes a significant operational overhead.
+      </div>
+    </div>
+
+    <!-- Execution: Field Rep -->
+    <div class="card">
+      <div class="section-label">Visit Execution — Field Rep</div>
+      <h2 class="card-title">How field reps execute visits in the Base Model</h2>
+      <ul class="feature-list">
+        <li>Opens the Salesforce mobile app (Lightning) — <strong style="color:var(--text);">requires active internet connection.</strong></li>
+        <li>Navigates to their visit list — sees today's scheduled stores.</li>
+        <li>Opens a visit → sees the ordered task list from the Action Plan Template.</li>
+        <li>Executes tasks in order: Inventory Check (captures facings, OOS, Share of Shelf) → Planogram Check (photo comparison) → Promotion Check → Place Order.</li>
+        <li>Captures actual KPI values — system generates Retail Visit KPI records against the store group targets.</li>
+        <li>Captures digital signature from store manager to release the order.</li>
+        <li>Closes the visit — data is immediately available in Salesforce.</li>
+      </ul>
+      <div class="callout warn">
+        <strong>Base Model limitation:</strong> If the store has poor or no internet connectivity (common in many retail environments), the field rep cannot use the app. There is no offline capability in the Base Model.
+      </div>
+    </div>
+
+    <!-- Limitations -->
+    <div class="card">
+      <div class="section-label">Limitations</div>
+      <h2 class="card-title">What the Base Model cannot do</h2>
+      <ul class="limit-list">
+        <li><strong style="color:var(--text);">No offline mobile app</strong> — field reps must have internet access at all times in store.</li>
+        <li><strong style="color:var(--text);">No territory management</strong> — no Org Units, no Sales Org segmentation, no automatic rep-to-store assignments.</li>
+        <li><strong style="color:var(--text);">No advanced orders</strong> — no Penny Perfect Pricing, no listing modules, no authorization lists. All customers see the same price book.</li>
+        <li><strong style="color:var(--text);">No Advanced Promotions (TPM)</strong> — promotions have no lifecycle (no Planning → ForApproval → Committed phases), no lock status, no tactic management.</li>
+        <li><strong style="color:var(--text);">No master data management from mobile</strong> — reps can view customer master data but cannot edit it. No customer templates or product templates.</li>
+        <li><strong style="color:var(--text);">No CRM Analytics</strong> — no pre-built compliance dashboards, no store-level performance analytics out of the box.</li>
+        <li><strong style="color:var(--text);">No Agentforce integration</strong> — no AI-generated visit insights, no automated visit creation, no product/promotion suggestions.</li>
+        <li><strong style="color:var(--text);">No VS Code Modeler customization</strong> — mobile app UI customization via Design Contracts not available in base model workflow.</li>
+        <li><strong style="color:var(--text);">No GPS tracking on visits</strong> — GPS tracking is only available for advanced (template-based) visits in the Enhanced Model.</li>
+      </ul>
+    </div>
+
+    <!-- Data model -->
+    <div class="card">
+      <div class="section-label">Data Model</div>
+      <h2 class="card-title">Core objects in the Base Model</h2>
+      <div class="pill-wrap">
+        <span class="pill">Account</span>
+        <span class="pill">RetailStore</span>
+        <span class="pill">RetailLocationGroup</span>
+        <span class="pill">InStoreLocation</span>
+        <span class="pill">OperatingHours</span>
+        <span class="pill">Product2</span>
+        <span class="pill">StoreProduct</span>
+        <span class="pill">Assortment</span>
+        <span class="pill">AssortmentProduct</span>
+        <span class="pill">StoreAssortment</span>
+        <span class="pill">Promotion</span>
+        <span class="pill">PromotionChannel</span>
+        <span class="pill">PromotionProduct</span>
+        <span class="pill">AssessmentIndicatorDefinition</span>
+        <span class="pill">RetailStoreKpi</span>
+        <span class="pill">RetailVisitKpi</span>
+        <span class="pill">AssessmentTaskDefinition</span>
+        <span class="pill">AssessmentTask</span>
+        <span class="pill">ActionPlanTemplate</span>
+        <span class="pill">StoreActionPlanTemplate</span>
+        <span class="pill">Visit</span>
+        <span class="pill">DeliveryTask</span>
+        <span class="pill">Shipment</span>
+        <span class="pill">ProductItem</span>
+        <span class="pill">ProductTransfer</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3: ENHANCED MODEL
+     ══════════════════════════════════════════════ -->
+<div id="tab-enhanced" class="tab-panel">
+  <div class="content-wrap">
+
+    <div class="card">
+      <div class="section-label">Enhanced Model Overview</div>
+      <h2 class="card-title">Consumer Goods Cloud — Advanced Retail Execution</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.8;max-width:860px;">
+        The Enhanced Model adds the Consumer Goods Cloud <strong style="color:var(--text);">managed package</strong> on top of the base configuration. It introduces a new data model layer (harmonized objects + side-by-side objects), unlocking offline mobile, territory management, advanced orders, advanced promotions, and AI capabilities.
+      </p>
+      <div class="callout info">
+        Requires: <strong>Enterprise or Unlimited</strong> Edition with Consumer Goods Cloud managed package installed. Available starting Spring '22. The base model and enhanced model can coexist — the existing UI flow (base) continues to work alongside the new UI flow.
+      </div>
+    </div>
+
+    <!-- Territory management -->
+    <div class="card">
+      <div class="section-label">What's new: Territory Management</div>
+      <h2 class="card-title">Org Units, Sales Orgs, and Multi-Market</h2>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Org Units and Org Unit Hierarchies</strong> — model your sales organization structure (Country → Region → District → Team). Each org unit maps to a set of customers and reps.</li>
+        <li><strong style="color:var(--text);">Multi-Market with Sales Orgs</strong> — use separate Sales Orgs to segregate data and configure different business processes for different markets (e.g., different countries or brands).</li>
+        <li><strong style="color:var(--text);">Automatic rep-to-store assignment</strong> — instead of manual visit creation per store, the system assigns reps to their territory's stores automatically.</li>
+        <li><strong style="color:var(--text);">Substitute assignment</strong> — when a rep is absent, assign a substitute who inherits the same store assignments and visits temporarily.</li>
+        <li><strong style="color:var(--text);">Team Supervisors</strong> — supervisors have role-based visibility into their team's daily activities, visits, and KPI performance.</li>
+      </ul>
+    </div>
+
+    <!-- Master Data Management -->
+    <div class="card">
+      <div class="section-label">What's new: Master Data Management</div>
+      <h2 class="card-title">Customer and Product Data — editable from mobile</h2>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Customer Templates</strong> — standardize the data model for customer records. Ensures consistency across all store records.</li>
+        <li><strong style="color:var(--text);">Customer Records with Roles</strong> — customers (accounts) can have roles like Orderer, defining who is authorized to place orders at that account.</li>
+        <li><strong style="color:var(--text);">Customer Sets and Grouping</strong> — group customers for targeted business processes, promotions, or reporting.</li>
+        <li><strong style="color:var(--text);">Time-dependent account and product hierarchies</strong> — account and product structures can change over time with effective dates, keeping historical accuracy.</li>
+        <li><strong style="color:var(--text);">Product Templates</strong> — standardize product data. Field reps can view and edit customer master data from the offline mobile app (not just view-only as in Base).</li>
+        <li><strong style="color:var(--text);">Editable from mobile</strong> — the new UI flow in the offline app lets reps update customer master data in the field, syncing back to Salesforce at end of day.</li>
+      </ul>
+    </div>
+
+    <!-- Advanced Orders -->
+    <div class="card">
+      <div class="section-label">What's new: Advanced Orders</div>
+      <h2 class="card-title">Penny Perfect Pricing, Listing Modules, Barcode Scanning</h2>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Penny Perfect Pricing</strong> — calculates exact prices and discounts per customer at order time. Accounts for customer-specific price lists, volume discounts, and promotional pricing — no rounding errors.</li>
+        <li><strong style="color:var(--text);">Authorization Lists + Listing Modules</strong> — controls which SKUs are authorized for each customer. A rep can only order products that are listed for that specific account. Eliminates unauthorized orders.</li>
+        <li><strong style="color:var(--text);">Flexible product unit of measures</strong> — products can have multiple units of measure (case, pallet, individual unit) with automatic conversion at order time.</li>
+        <li><strong style="color:var(--text);">Barcode scanning (offline app)</strong> — reps scan product barcodes to quickly add items to an order. No manual product lookup needed.</li>
+        <li><strong style="color:var(--text);">Advanced order templates</strong> — reusable order templates with quantity rounding rules and pre-configured product selections.</li>
+        <li><strong style="color:var(--text);">Sales Folder</strong> — enhances the sales pitch with promotional materials shown during the order-taking process in the mobile app.</li>
+      </ul>
+    </div>
+
+    <!-- Advanced Promotions (TPM) -->
+    <div class="card">
+      <div class="section-label">What's new: Advanced Promotions (TPM)</div>
+      <h2 class="card-title">Trade Promotion Management — Lifecycle and Approvals</h2>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Promotion lifecycle phases</strong> — promotions move through phases: Planning → ForApproval → Committed. Each phase can trigger lock rules preventing edits or deletion.</li>
+        <li><strong style="color:var(--text);">Promotion Lock Status</strong> — configure which phases lock the promotion from modification (RE_Promotion_Lock_Status Custom Setting). Prevents accidental changes to committed promotions.</li>
+        <li><strong style="color:var(--text);">Tactics and Tactic Products</strong> — break a promotion into individual tactics (display, sampling, price reduction) each with their own products and targets.</li>
+        <li><strong style="color:var(--text);">Copy Promotion</strong> — copy a successful promotion's slogan, products, and tactics to a new promotion for another customer or period, with a new anchor customer and in-store date.</li>
+        <li><strong style="color:var(--text);">Promotion Planning for KAM</strong> — Key Account Managers plan and commit promotions per account, with visibility into spend, ROI, and execution compliance.</li>
+      </ul>
+    </div>
+
+    <!-- Offline Mobile App -->
+    <div class="card">
+      <div class="section-label">What's new: Offline Mobile App</div>
+      <h2 class="card-title">Consumer Goods Cloud Offline Mobile App — work without internet</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.8;margin-bottom:16px;">
+        The CG Cloud Offline Mobile App is the cornerstone capability of the Enhanced Model. Field reps download their data at the start of day (sync), work completely offline in store, then sync again at end of day.
+      </p>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Start-of-Day sync</strong> — app downloads visits, customer data, products, promotions, and task lists for the day.</li>
+        <li><strong style="color:var(--text);">End-of-Day sync</strong> — app uploads all captured data (KPIs, orders, survey responses, photos) to Salesforce.</li>
+        <li><strong style="color:var(--text);">New UI flow</strong> — offline app has a new experience supporting: offline visit planning, advanced orders, sales folder, mobile links, CRM Analytics integration, editable master data, and personal settings.</li>
+        <li><strong style="color:var(--text);">Advanced Visits (template-based)</strong> — created using job templates. Supports different visit types (audit, sales, delivery). GPS tracking enabled on advanced visits.</li>
+        <li><strong style="color:var(--text);">Map-based visit creation</strong> — supervisors and reps can create visits by selecting stores on a map. Salesforce Maps integration.</li>
+        <li><strong style="color:var(--text);">Trip Lists</strong> — optimized daily routes. Supervisor creates a trip list (ordered store sequence), rep follows the route on the mobile app.</li>
+        <li><strong style="color:var(--text);">Create Visits from Job Lists</strong> — auto-create visits from predefined job lists, reducing manual planning effort.</li>
+        <li><strong style="color:var(--text);">Barcode scan to create visits</strong> — scan a store barcode to instantly create a visit for that store.</li>
+      </ul>
+      <div class="sub-heading">Sync Management</div>
+      <ul class="feature-list">
+        <li>Sync Management app (Admin) — configures what data is included in each sync: business data, workflow-specific data, Runtime Artifacts, and metadata.</li>
+        <li>Checks for updates to the mobile app itself and transfers them automatically.</li>
+        <li>Controls sync frequency and conflict resolution strategy.</li>
+      </ul>
+    </div>
+
+    <!-- Advanced Visits -->
+    <div class="card">
+      <div class="section-label">What's new: Advanced Visit Planning</div>
+      <h2 class="card-title">Job Templates, Trip Lists, and Activity Templates</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Job Templates &amp; Job Definitions</div>
+          <ul class="feature-list">
+            <li>Job Template = visit type definition (e.g., "Standard Audit Visit", "New Product Launch Visit")</li>
+            <li>Job Definition Template = the specific tasks associated to a job type</li>
+            <li>Activity Templates = individual activity scripts within a job</li>
+            <li>Assign Job Definition Templates to Activity Templates for modular task composition</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Customer Tasks</div>
+          <ul class="feature-list">
+            <li>Customer Task Templates — simple, ad-hoc tasks like "meet store manager" or "check refrigerator temperature"</li>
+            <li>Not tied to Action Plan Templates — more flexible for one-off activities</li>
+            <li>Supervisor creates templates, reps create tasks from them during a visit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRM Analytics -->
+    <div class="card">
+      <div class="section-label">What's new: Analytics</div>
+      <h2 class="card-title">CRM Analytics for Consumer Goods</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Standard Analytics (Store-Level)</div>
+          <ul class="feature-list">
+            <li>Pre-built dashboards: visit compliance, inventory performance, promotion execution</li>
+            <li>KPIs: Avg Facing Compliance, Avg Out-of-Stock %, Avg Share of Shelf, Avg Price Compliance</li>
+            <li>Sales manager view: identify stores at risk, maximize rep effectiveness</li>
+            <li>Field rep view: store-level insights on visits, sales, compliance, top-selling products</li>
+            <li>Live reporting embedded directly in the mobile app</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Advanced Analytics (Account-Level)</div>
+          <ul class="feature-list">
+            <li>Advanced Data Model analytics — account-level insights instead of just store-level</li>
+            <li>Account compliance across all stores under an account</li>
+            <li>Sales folder performance tracking</li>
+            <li>Pre-aggregated data for large-scale reporting without live queries</li>
+            <li>Requires: Analytics for Consumer Goods - Advanced Data Model setup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agentforce -->
+    <div class="card">
+      <div class="section-label">What's new: AI Features</div>
+      <h2 class="card-title">Agentforce for Retail Execution + Einstein AI</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Agentforce for Retail Execution</div>
+          <ul class="feature-list">
+            <li>Agents run on the Consumer Goods Cloud mobile and desktop apps</li>
+            <li>Generate account and visit insights automatically before a visit</li>
+            <li>Suggest which products and promotions to highlight for a specific store</li>
+            <li>Automatically create visits based on patterns and recommendations</li>
+            <li>Streamline key tasks via natural language in the mobile app</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Einstein Generative AI</div>
+          <ul class="feature-list">
+            <li>Comprehensive account performance evaluations via Einstein Quick Insights</li>
+            <li>Inventory deviation detection and explanations</li>
+            <li>AI-generated asset summaries and service reviews</li>
+            <li>Draft customer emails and appointment summaries</li>
+            <li>Handle asset service actions (generate quotes)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="sub-heading">Einstein Visit Recommendations</div>
+      <ul class="feature-list">
+        <li>Assists sales managers and field reps in identifying which stores to prioritize for field visits</li>
+        <li>Analyzes visit history, KPI trends, and sales data to surface high-priority stores</li>
+        <li>Enhances efficiency by focusing field time on stores with the most business impact</li>
+        <li>Requires setup and scheduling via the Visit Recommendations configuration</li>
+      </ul>
+    </div>
+
+    <!-- Asset Management -->
+    <div class="card">
+      <div class="section-label">What's new: Asset Management</div>
+      <h2 class="card-title">Assets, Audits, and AI Summaries</h2>
+      <ul class="feature-list">
+        <li><strong style="color:var(--text);">Asset Templates</strong> — define standard asset types (refrigerators, display units, vending machines) with expected service intervals and audit criteria.</li>
+        <li><strong style="color:var(--text);">Assets</strong> — individual asset records placed at specific stores or in-store locations. Tracked via serial number, condition, and maintenance history.</li>
+        <li><strong style="color:var(--text);">Asset Audits</strong> — field reps audit assets during visits: verify condition, temperature, stocking levels, branding compliance.</li>
+        <li><strong style="color:var(--text);">AI-generated summaries</strong> — Einstein Generative AI produces natural language summaries of asset condition and service history for field reps and supervisors.</li>
+        <li><strong style="color:var(--text);">Telematics data</strong> — integrate asset telemetry (e.g., refrigerator temperature sensors) for proactive service alerts.</li>
+      </ul>
+    </div>
+
+    <!-- Data model -->
+    <div class="card">
+      <div class="section-label">Data Model</div>
+      <h2 class="card-title">Additional objects in the Enhanced Model</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:14px;">All Base Model objects plus the following (green = Enhanced-only):</p>
+      <div class="pill-wrap">
+        <span class="pill new">OrgUnit</span>
+        <span class="pill new">OrgUnitHierarchy</span>
+        <span class="pill new">SalesOrg</span>
+        <span class="pill new">CustomerTemplate</span>
+        <span class="pill new">CustomerSet</span>
+        <span class="pill new">AuthorizationList</span>
+        <span class="pill new">ListingModule</span>
+        <span class="pill new">AdvancedOrder</span>
+        <span class="pill new">OrderTemplate</span>
+        <span class="pill new">AdvancedPromotion</span>
+        <span class="pill new">PromotionTactic</span>
+        <span class="pill new">JobTemplate</span>
+        <span class="pill new">JobDefinitionTemplate</span>
+        <span class="pill new">ActivityTemplate</span>
+        <span class="pill new">CustomerTask</span>
+        <span class="pill new">CustomerTaskTemplate</span>
+        <span class="pill new">TripList</span>
+        <span class="pill new">Asset (CG)</span>
+        <span class="pill new">AssetTemplate</span>
+        <span class="pill">Shipment</span>
+        <span class="pill">ProductItem</span>
+        <span class="pill">ProductTransfer</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4: COMPARISON
+     ══════════════════════════════════════════════ -->
+<div id="tab-compare" class="tab-panel">
+  <div class="content-wrap">
+
+    <div class="card">
+      <div class="section-label">Feature Comparison</div>
+      <h2 class="card-title">Base Model vs Enhanced Model — applied to the SnackCo scenario</h2>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:24px;">
+        Same use case, different capabilities. The "When it matters" column explains the real-world implication for SnackCo's field force.
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="width:28%">Feature</th>
+            <th style="width:13%">Base</th>
+            <th style="width:13%">Enhanced</th>
+            <th>When it matters for SnackCo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Store visits (manual creation)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Available in both. Supervisor creates visits per store manually.</td>
+          </tr>
+          <tr>
+            <td>Action Plan Templates (task checklists)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Both models support reusable visit checklists with ordered tasks.</td>
+          </tr>
+          <tr>
+            <td>KPI tracking (Facing, OOS, Share of Shelf)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Available in both. KPIs defined at store group level, captured per visit.</td>
+          </tr>
+          <tr>
+            <td>Promotion management (basic)</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Both support promotions linked to stores/products. Enhanced adds lifecycle.</td>
+          </tr>
+          <tr>
+            <td>Digital signature capture</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Store manager signs off on orders in both models.</td>
+          </tr>
+          <tr>
+            <td>Planogram checks with photos</td>
+            <td><span class="check">✓</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Field reps upload store photos and compare to reference planogram image.</td>
+          </tr>
+          <tr>
+            <td>Einstein Visit Recommendations</td>
+            <td><span class="partial">Basic</span></td>
+            <td><span class="check">Advanced</span></td>
+            <td>Base model requires manual configuration. Enhanced has richer data inputs and AI-driven prioritization.</td>
+          </tr>
+          <tr>
+            <td><strong>Offline mobile app</strong></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Critical if SnackCo reps visit convenience stores or rural locations without reliable connectivity.</td>
+          </tr>
+          <tr>
+            <td>GPS tracking on visits</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Enhanced only (template-based advanced visits). Supervisors can verify reps visited the actual store.</td>
+          </tr>
+          <tr>
+            <td>Barcode scanning for orders</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Reps scan product barcodes to add items to order — faster and less error-prone in noisy store environments.</td>
+          </tr>
+          <tr>
+            <td><strong>Territory management</strong></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Essential if SnackCo has 50+ reps across multiple regions. Eliminates manual store-to-rep assignment.</td>
+          </tr>
+          <tr>
+            <td>Substitute rep assignment</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>When a rep is sick, a substitute inherits their stores and visits for the day. No manual reassignment.</td>
+          </tr>
+          <tr>
+            <td>Trip lists (optimized routes)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Supervisor creates an optimized store sequence for the day. Reduces drive time between stores.</td>
+          </tr>
+          <tr>
+            <td><strong>Penny Perfect Pricing</strong></td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>If SnackCo has different contract prices per retail chain (e.g., Walmart vs. 7-Eleven), exact pricing at order time is critical.</td>
+          </tr>
+          <tr>
+            <td>Authorization lists (listing modules)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Controls which SKUs each customer can order. Prevents reps from selling products not listed for a specific account.</td>
+          </tr>
+          <tr>
+            <td>Advanced Promotions / TPM (lifecycle)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>If SnackCo's KAMs need to plan and approve promotions with defined phases and tactic tracking.</td>
+          </tr>
+          <tr>
+            <td>Master data editable from mobile</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Reps can update store contact info or ordering details in the field — syncs back to Salesforce at end of day.</td>
+          </tr>
+          <tr>
+            <td>CRM Analytics dashboards</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Managers need compliance KPIs (OOS %, Facing %, Promotion compliance) across all stores without manual report building.</td>
+          </tr>
+          <tr>
+            <td>Agentforce AI (visit insights, suggestions)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>AI-generated pre-visit briefings (what to focus on at this store) and product/promotion suggestions during the visit.</td>
+          </tr>
+          <tr>
+            <td>Asset management (coolers, displays)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>If SnackCo places refrigerators or branded displays in stores, tracking their condition and audit history requires Enhanced.</td>
+          </tr>
+          <tr>
+            <td>Multi-market / Sales Org segmentation</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>If SnackCo operates in multiple countries or brands under one Salesforce org, Sales Org segregation is required.</td>
+          </tr>
+          <tr>
+            <td>Mobile app UI customization (VS Code Modeler)</td>
+            <td><span class="cross">✗</span></td>
+            <td><span class="check">✓</span></td>
+            <td>Customize the mobile app UI, processes, and data sources using Design Contracts in VS Code. Enhanced Model only.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Architecture difference -->
+    <div class="card">
+      <div class="section-label">Architecture Difference</div>
+      <h2 class="card-title">How the two models coexist</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.8;margin-bottom:16px;">
+        Starting Spring '22, CG Cloud introduced a side-by-side architecture. The Base Model uses the <strong style="color:var(--text);">existing UI flow</strong>. The Enhanced Model introduces the <strong style="color:var(--text);">new UI flow</strong>. Both share the same Visit object and core data model, but have different business logic and UI layers.
+      </p>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;">Existing UI Flow (Base)</div>
+          <ul class="feature-list">
+            <li>Standard visits with assessment tasks based on retail stores and accounts</li>
+            <li>Advanced orders (online Salesforce app)</li>
+            <li>View-only customer master data</li>
+            <li>Assign action plans only to standard visits</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;">New UI Flow (Enhanced)</div>
+          <ul class="feature-list">
+            <li>Offline visit planning and execution based on accounts</li>
+            <li>Sales folder, mobile links, CRM Analytics integration</li>
+            <li>Editable customer master data from mobile</li>
+            <li>Advanced orders with templates and quantity rounding</li>
+            <li>GPS tracking (advanced visits only)</li>
+            <li>Adjustable personal settings per user</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout warn" style="margin-top:20px;">
+        <strong>Migration note:</strong> Use out-of-the-box GPS tracking only for template-based (advanced) visits. Standard visits cannot have GPS tracking. The Canceled visit status is available only for advanced visits. When an advanced visit is created for an account, only users assigned to that account can view or execute the visit.
+      </div>
+    </div>
+
+    <!-- Decision guide -->
+    <div class="card">
+      <div class="section-label">Decision Guide</div>
+      <h2 class="card-title">Which model for SnackCo?</h2>
+      <div class="two-col">
+        <div>
+          <div class="sub-heading" style="margin-top:0;color:var(--accent);">Start with Base Model if:</div>
+          <ul class="feature-list">
+            <li>Under 30 field reps, store assignments can be managed manually</li>
+            <li>All stores have WiFi or strong mobile data</li>
+            <li>Single country, single price list</li>
+            <li>Promotions don't need formal approval workflows</li>
+            <li>Budget constraint — want to prove value before full investment</li>
+            <li>Timeline is tight — Base Model is faster to configure and deploy</li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub-heading" style="margin-top:0;color:var(--accent);">Move to Enhanced Model when:</div>
+          <ul class="feature-list">
+            <li>Field reps report connectivity issues in stores</li>
+            <li>Territory management becomes unmanageable manually</li>
+            <li>Pricing disputes arise because of inconsistent order prices</li>
+            <li>Promotions require KAM approval before activation</li>
+            <li>Supervisors need real-time dashboards, not manual reports</li>
+            <li>Agentforce or Einstein AI is in the roadmap</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
