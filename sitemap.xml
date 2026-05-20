@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+<<<<<<< HEAD
     <loc>https://salesforcepedia.com/</loc>
+=======
+    <loc>https://YOUR-DOMAIN.com/</loc>
+>>>>>>> cae5b5af8d1334efd33c0ffed9ed832cb6ae1043
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+<<<<<<< HEAD
     <loc>https://salesforcepedia.com/agentforce/</loc>
+=======
+    <loc>https://YOUR-DOMAIN.com/agentforce/</loc>
+>>>>>>> cae5b5af8d1334efd33c0ffed9ed832cb6ae1043
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+<<<<<<< HEAD
     <loc>https://salesforcepedia.com/data-cloud/</loc>
+=======
+    <loc>https://YOUR-DOMAIN.com/data-cloud/</loc>
+>>>>>>> cae5b5af8d1334efd33c0ffed9ed832cb6ae1043
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+<<<<<<< HEAD
     <loc>https://salesforcepedia.com/auth-flows/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+=======
+    <loc>https://YOUR-DOMAIN.com/auth-flows/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://YOUR-DOMAIN.com/progress/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+>>>>>>> cae5b5af8d1334efd33c0ffed9ed832cb6ae1043
 </urlset>
