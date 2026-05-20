@@ -1,0 +1,268 @@
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.step-item:hover { background: var(--surface2); }
+
+.step-item.active {
+  background: var(--surface2);
+  border-left-color: var(--accent);
+}
+
+.step-item.completed .step-num {
+  background: var(--green);
+  color: var(--bg);
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.step-item.active .step-num {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.step-title { font-size: 15px; font-weight: 500; line-height: 1.4; }
+.step-actor { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+.step-header {
+  margin-bottom: 24px;
+}
+
+.step-header .actor-badge {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.actor-client     { background: var(--tint-accent);  color: var(--accent); }
+.actor-browser    { background: var(--tint-green);   color: var(--accent2); }
+.actor-authserver { background: var(--tint-yellow);  color: var(--yellow); }
+.actor-resource   { background: var(--tint-green);   color: var(--green); }
+
+.step-header h2 { font-size: 25px; font-weight: 700; margin-bottom: 8px; }
+.step-header p { font-size: 17px; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+.section { margin-bottom: 28px; }
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.explanation-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.explanation-box ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.explanation-box li { margin-bottom: 6px; }
+
+.highlight { color: var(--accent); font-weight: 600; }
+.hl-green { color: var(--green); font-weight: 600; }
+.hl-yellow { color: var(--yellow); font-weight: 600; }
+
+/* Data exchange cards */
+.data-card {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.data-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.direction-badge {
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.dir-send     { background: var(--tint-accent);  color: var(--accent); }
+.dir-receive  { background: var(--tint-green);   color: var(--green); }
+.dir-generate { background: var(--tint-yellow);  color: var(--yellow); }
+
+.data-card pre {
+  padding: 16px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.key     { color: var(--accent2); }
+.val     { color: var(--green); }
+.url     { color: var(--red); }
+.comment { color: var(--muted); font-style: italic; }
+
+/* diagram */
+.flow-diagram {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+
+.flow-diagram svg {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Why it matters callout */
+.callout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--tint-callout);
+  border: 1px solid var(--border-callout);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.callout-icon { font-size: 20px; margin-top: 1px; }
+.callout-body { font-size: 13.5px; line-height: 1.6; }
+.callout-body strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+/* nav */
+.step-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.btn {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover { filter: brightness(1.15); }
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover { background: var(--border); }
+
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.progress-text {
+  font-size: 15px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* completion screen */
+.completion {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.completion .big-icon { font-size: 56px; margin-bottom: 20px; }
+.completion h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+.completion p { color: var(--muted); font-size: 17px; max-width: 480px; margin: 0 auto 28px; line-height: 1.6; }
+
+.token-summary {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  text-align: left;
+  max-width: 560px;
+  margin: 0 auto 28px;
+}
+
+.token-summary h3 { font-size: 15px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+
+.token-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.token-row-label { color: var(--muted); min-width: 140px; }
+.token-row-val { font-family: monospace; color: var(--green); font-size: 14px; word-break: break-all; }
+
+.flow-progress-wrap {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px 10px;
+  margin-bottom: 24px;
+}
+
+.flow-progress-wrap .section-title { margin-bottom: 10px; }

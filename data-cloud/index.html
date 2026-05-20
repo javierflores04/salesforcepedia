@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script src="../js/theme.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data 360 Architecture — Salesforcepedia</title>
+  <meta name="description" content="Salesforce Data Cloud (Data 360) architecture: ingest patterns, DLO/DMO data model, identity resolution, unstructured AI grounding, governance, and multi-org strategy.">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="../vendor/mermaid/mermaid.min.js"></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html" class="brand">Salesforce<span>pedia</span></a>
+  <a href="../index.html" class="nav-link">Home</a>
+  <a href="#" class="nav-link active">Data 360</a>
+  <span class="badge">DATA</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+</nav>
+
+<a href="../index.html" class="back-link">← Back to Home</a>
+
+<div class="page-hero" style="padding-left:0;padding-right:0;">
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;">
+    <div class="eyebrow">Data 360 Architecture</div>
+    <h1>Ingest · Prepare · Unify · Analyze · Govern · Act</h1>
+    <p>A structured reference for Data 360 (formerly Salesforce Data Cloud) — ingestion patterns, the DLO/DMO data model, identity resolution, unstructured AI grounding, governance, and multi-org strategy.</p>
+  </div>
+</div>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('architecture', this)">📘 Architecture</button>
+  <button class="tab-btn" onclick="switchTab('example', this)">🛍️ Real Example — Retail Unified Profile</button>
+</div>
+
+<div id="tab-architecture" class="tab-panel active">
+<div class="content-wrap">
+
+  <!-- INTRO CARD -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:background 0.3s,border-color 0.3s;">
+    <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">Data 360 Architecture</div>
+    <h2 style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:10px;transition:color 0.3s;">☁️ Salesforce Data 360 — formerly Data Cloud</h2>
+    <p style="font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:860px;transition:color 0.3s;">
+      Data 360 is Salesforce's unified data platform for ingesting, harmonizing, and activating data at scale. It powers Unified Profiles for identity resolution, AI grounding via RAG for Agentforce, and real-time insights across the Customer 360. This reference covers the full lifecycle from raw ingestion to AI activation.
+    </p>
+    <!-- Anchor nav -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+      <a href="#lifecycle" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔄 Data Flow</a>
+      <a href="#connect" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔌 Connect</a>
+      <a href="#prepare" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔧 Prepare</a>
+      <a href="#unstructured" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🧠 Unstructured &amp; AI</a>
+      <a href="#unify" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔗 Unify &amp; Analyze</a>
+      <a href="#governance" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🛡️ Governance</a>
+      <a href="#multiorg" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏢 Multi-Org</a>
+      <a href="#overview" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🗺️ Full Overview</a>
+    </div>
+  </div>
+
+  <!-- ── 1. DATA FLOW LIFECYCLE ── -->
+  <section id="lifecycle">
+    <div class="section-header">
+      <div class="section-icon icon-cyan">🔄</div>
+      <div>
+        <h2>Data Flow Lifecycle</h2>
+        <p>The four operational phases of Data 360 — formerly Salesforce Data Cloud</p>
+      </div>
+    </div>
+    <div class="lifecycle">
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="pipe-bubble pb-cyan">🔌</div>
+          <div class="pipe-label">Connect / Ingest</div>
+          <div class="pipe-sub">Bring external data in via connectors or federate from external lakes</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipe-bubble pb-purple">🔧</div>
+          <div class="pipe-label">Prepare / Transform</div>
+          <div class="pipe-sub">Clean, shape, and map raw data into DLOs → DMOs</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipe-bubble pb-amber">🔗</div>
+          <div class="pipe-label">Harmonize / Unify</div>
+          <div class="pipe-sub">Resolve identities and build Unified Profiles from disparate sources</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="pipe-bubble pb-green">⚡</div>
+          <div class="pipe-label">Analyze / Act</div>
+          <div class="pipe-sub">Generate Insights, power AI, activate across channels</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. CONNECT ── -->
+  <section id="connect">
+    <div class="section-header">
+      <div class="section-icon icon-cyan">🔌</div>
+      <div>
+        <h2>Connect Data — Ingestion &amp; Federation</h2>
+        <p>Two patterns for getting data into Data 360: move it or query it in place</p>
+      </div>
+    </div>
+    <div class="card-grid cols-2">
+      <div class="af-card cyan-hover">
+        <h3>📥 Data Streams <span class="dc-tag tag-cyan">Ingestion</span></h3>
+        <ul>
+          <li>Pipelines established via connectors (Amazon S3, Google Cloud Storage, Salesforce CRM, etc.)</li>
+          <li>Data is physically brought <strong>into</strong> Data 360</li>
+          <li>Lands first in Data Lake Objects (DLOs) as raw, unmapped data</li>
+          <li>Best for: high-frequency data that needs transformation and unification</li>
+        </ul>
+      </div>
+      <div class="af-card cyan-hover">
+        <h3>🔭 Zero Copy Data Federation <span class="dc-tag tag-purple">Federation</span></h3>
+        <ul>
+          <li>Query data from external data lakes <strong>without moving or duplicating it</strong></li>
+          <li>Data physically stays in its source system</li>
+          <li><strong>Query Federation:</strong> live compute-based queries (e.g., Snowflake, BigQuery)</li>
+          <li><strong>File Federation:</strong> storage-based queries reading open table formats (e.g., Delta, Iceberg)</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="af-card cyan-hover">
+        <h3>⚡ Caching / Acceleration <span class="dc-tag tag-amber">Performance</span></h3>
+        <ul>
+          <li>Temporarily stores external federated data in a <strong>local cache</strong></li>
+          <li>Improves performance and reduces latency for frequent queries</li>
+          <li>Cache refreshes at configurable intervals — data is not permanently stored</li>
+          <li>Use when: federation query is expensive and the data doesn't change in real time</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <div class="dc-table-wrap">
+        <table class="dc-table">
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>Data Location</th>
+              <th>Latency</th>
+              <th>Best For</th>
+              <th>Cost Consideration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Streams (Ingestion)</td>
+              <td>Copied into Data 360</td>
+              <td>Batch / Near Real-Time</td>
+              <td>Unified profiles, transformations, AI grounding</td>
+              <td>Storage consumed in Data 360</td>
+            </tr>
+            <tr>
+              <td>Query Federation</td>
+              <td>Stays in source (e.g., Snowflake)</td>
+              <td>Real-time (compute-bound)</td>
+              <td>Large datasets, avoid duplication, live queries</td>
+              <td>Compute cost on source system per query</td>
+            </tr>
+            <tr>
+              <td>File Federation</td>
+              <td>Stays in object storage (S3, ADLS)</td>
+              <td>Near Real-Time</td>
+              <td>Open table formats, data lake architectures</td>
+              <td>Storage read costs on source</td>
+            </tr>
+            <tr>
+              <td>Caching / Acceleration</td>
+              <td>Temporarily in local cache</td>
+              <td>Low (cached)</td>
+              <td>Frequent reads on federated data</td>
+              <td>Temporary storage + refresh compute</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. PREPARE ── -->
+  <section id="prepare">
+    <div class="section-header">
+      <div class="section-icon icon-purple">🔧</div>
+      <div>
+        <h2>Prepare &amp; Model Data</h2>
+        <p>From raw ingestion to harmonized, queryable objects</p>
+      </div>
+    </div>
+    <div class="card-grid cols-2">
+      <div class="af-card purple-hover">
+        <h3>🗃️ Data Lake Objects (DLOs) <span class="dc-tag tag-purple">Raw</span></h3>
+        <ul>
+          <li>Initial storage containers for <strong>raw, unmapped</strong> data</li>
+          <li>Data lands here first from Data Streams</li>
+          <li>No schema enforcement yet — preserve original structure</li>
+          <li>Think of DLOs as the "landing zone" before processing</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>📐 Data Model Objects (DMOs) <span class="dc-tag tag-cyan">Harmonized</span></h3>
+        <ul>
+          <li>Harmonized groupings mapped to the <strong>Customer 360 Data Model</strong></li>
+          <li>Standardized schema across all data sources</li>
+          <li>Enable cross-source joins and identity resolution</li>
+          <li>Think of DMOs as the "clean, usable layer" above DLOs</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>⚙️ Data Transforms <span class="dc-tag tag-amber">Processing</span></h3>
+        <ul>
+          <li>Batch or Streaming processes to combine, clean, and shape data</li>
+          <li>Run directly within the platform — no external ETL needed</li>
+          <li>Output can map to DMOs or other DLOs</li>
+          <li>Use for: deduplication, field normalization, enrichment, aggregation</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>🔑 Fully Qualified Keys (FQK) <span class="dc-tag tag-rose">Key Management</span></h3>
+        <ul>
+          <li>Combines a <strong>source key</strong> + <strong>key qualifier</strong> to create a globally unique identifier</li>
+          <li>Prevents key conflicts when harmonizing data from multiple sources</li>
+          <li>Example: <code>CRM_001</code> from Salesforce + <code>ERP_001</code> from SAP don't collide</li>
+          <li>Critical for correct Identity Resolution downstream</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <div class="dc-table-wrap">
+        <table class="dc-table">
+          <thead>
+            <tr><th>Object Type</th><th>Layer</th><th>Schema</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>DLO (Data Lake Object)</td><td>Raw</td><td>Source-native, unmapped</td><td>Landing zone for ingested data</td></tr>
+            <tr><td>DMO (Data Model Object)</td><td>Harmonized</td><td>Customer 360 standard model</td><td>Unified, queryable, AI-ready data</td></tr>
+            <tr><td>UDLO (Unstructured DLO)</td><td>Raw Unstructured</td><td>None (PDFs, HTML, audio)</td><td>Reference container for unstructured files</td></tr>
+            <tr><td>UDMO (Unstructured DMO)</td><td>Harmonized Unstructured</td><td>Grouped by content type</td><td>Chunked, vectorized, indexed for AI/RAG</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 4. UNSTRUCTURED & AI ── -->
+  <section id="unstructured">
+    <div class="section-header">
+      <div class="section-icon icon-purple">🧠</div>
+      <div>
+        <h2>Unstructured Data &amp; AI Grounding</h2>
+        <p>How Data 360 powers RAG for Agentforce, Prompt Templates, and Einstein AI</p>
+      </div>
+    </div>
+    <div class="card-grid cols-2">
+      <div class="af-card purple-hover">
+        <h3>📁 UDLOs &amp; UDMOs <span class="dc-tag tag-purple">Containers</span></h3>
+        <ul>
+          <li><strong>UDLO:</strong> References unstructured files — PDFs, HTML, audio transcripts, images</li>
+          <li><strong>UDMO:</strong> Groups UDLOs into logical domains for AI consumption</li>
+          <li>No traditional schema — content-based organization</li>
+          <li>Equivalent to DLO/DMO but for unstructured content</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>✂️ Chunking &amp; Vectorization <span class="dc-tag tag-cyan">AI Processing</span></h3>
+        <ul>
+          <li>Breaks unstructured content into <strong>semantically meaningful chunks</strong></li>
+          <li>Each chunk is transformed into a <strong>vector embedding</strong> for machine readability</li>
+          <li>Chunking respects document structure (headings, paragraphs) for better context preservation</li>
+          <li>Output feeds Search Indexes for retrieval</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>🔍 Search Indexes <span class="dc-tag tag-green">Retrieval</span></h3>
+        <ul>
+          <li><strong>Vector Index:</strong> Semantic similarity search — finds conceptually related content</li>
+          <li><strong>Hybrid Index:</strong> Combines vector + keyword search for broader coverage</li>
+          <li>Generated from vectorized chunks in UDMOs</li>
+          <li>Power Retrieval Augmented Generation (RAG) in Agentforce and Prompt Builder</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>🌉 Retrievers <span class="dc-tag tag-amber">Bridge Layer</span></h3>
+        <ul>
+          <li>Logical layer bridging the Search Index to downstream AI solutions</li>
+          <li>Run at <strong>inference time</strong> — triggered per query, not pre-baked</li>
+          <li>Surface relevant chunks to: AI Agents, Prompt Templates, Einstein Copilot</li>
+          <li>Can be scoped per Subagent for domain-specific knowledge grounding</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:background 0.3s,border-color 0.3s;">
+      <div style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:20px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;">RAG Pipeline — Unstructured Data to AI Response</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;min-width:600px;overflow-x:auto;">
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(139,92,246,0.15);border:1px solid #8b5cf6;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#a78bfa;">📁 UDLO<br><span style="font-weight:400;color:var(--muted)">PDFs, HTML,<br>Audio</span></div>
+        </div>
+        <div style="color:var(--accent);font-size:1.2rem;padding:0 4px;">→</div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(139,92,246,0.15);border:1px solid #8b5cf6;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#a78bfa;">📐 UDMO<br><span style="font-weight:400;color:var(--muted)">Grouped by<br>domain</span></div>
+        </div>
+        <div style="color:var(--accent);font-size:1.2rem;padding:0 4px;">→</div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(6,182,212,0.15);border:1px solid #06b6d4;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#22d3ee;">✂️ Chunk &amp;<br>Vectorize<br><span style="font-weight:400;color:var(--muted)">Embeddings</span></div>
+        </div>
+        <div style="color:var(--accent);font-size:1.2rem;padding:0 4px;">→</div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(16,185,129,0.15);border:1px solid #10b981;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#34d399;">🔍 Search<br>Index<br><span style="font-weight:400;color:var(--muted)">Vector/Hybrid</span></div>
+        </div>
+        <div style="color:var(--accent);font-size:1.2rem;padding:0 4px;">→</div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(245,158,11,0.15);border:1px solid #f59e0b;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#fbbf24;">🌉 Retriever<br><span style="font-weight:400;color:var(--muted)">At inference<br>time</span></div>
+        </div>
+        <div style="color:var(--accent);font-size:1.2rem;padding:0 4px;">→</div>
+        <div style="text-align:center;padding:0 12px;">
+          <div style="background:rgba(244,63,94,0.15);border:1px solid #f43f5e;border-radius:10px;padding:12px 16px;font-size:0.78rem;font-weight:600;color:#fb7185;">🤖 AI Agent /<br>Prompt Template<br><span style="font-weight:400;color:var(--muted)">Grounded response</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 5. UNIFY & ANALYZE ── -->
+  <section id="unify">
+    <div class="section-header">
+      <div class="section-icon icon-amber">🔗</div>
+      <div>
+        <h2>Harmonize, Unify &amp; Analyze</h2>
+        <p>Identity resolution, Data Graphs, and three types of Insights</p>
+      </div>
+    </div>
+
+    <div class="card-grid cols-2" style="margin-bottom:24px;">
+      <div class="af-card amber-hover">
+        <h3>👤 Identity Resolution <span class="dc-tag tag-amber">Unification</span></h3>
+        <ul>
+          <li>Uses <strong>match and reconciliation rulesets</strong> to merge disparate records</li>
+          <li>Output: <strong>Unified Profiles</strong> (e.g., Unified Individual, Unified Account)</li>
+          <li>Match rules: exact match, fuzzy match, probabilistic — configurable per use case</li>
+          <li>Reconciliation rules determine which field value "wins" when sources conflict</li>
+          <li>FQKs ensure source records are correctly attributed post-merge</li>
+        </ul>
+      </div>
+      <div class="af-card amber-hover">
+        <h3>🕸️ Data Graphs <span class="dc-tag tag-green">Performance</span></h3>
+        <ul>
+          <li>Materialized, <strong>read-only JSON views</strong> combining multiple DMOs</li>
+          <li>Pre-computed for fast, near real-time or real-time querying</li>
+          <li>Power Real-Time Insights and low-latency AI activations</li>
+          <li>Think of them as pre-joined, optimized snapshots of related data</li>
+          <li>Automatically refresh based on configured update frequency</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <div class="insight-card insight-calc">
+        <h3>📊 Calculated Insights <span class="insight-tag tag-calc">Batch</span></h3>
+        <p>Built for <strong>high-volume data processing</strong> and complex, historical metric generation. Runs as batch jobs on large datasets — ideal for customer lifetime value, historical purchase frequency, or aggregated segment scores.</p>
+        <div class="insight-use">Best for: historical analysis, ML feature generation, complex aggregations</div>
+      </div>
+      <div class="insight-card insight-stream">
+        <h3>⚡ Streaming Insights <span class="insight-tag tag-stream">Near Real-Time</span></h3>
+        <p>Designed for <strong>continuous processing of micro-batches</strong> in near real-time. Processes data as it arrives in small windows — ideal for updating engagement scores, session activity, or cart abandonment signals.</p>
+        <div class="insight-use">Best for: behavioral signals, running counters, event-driven metric updates</div>
+      </div>
+      <div class="insight-card insight-rt">
+        <h3>🚀 Real-Time Insights <span class="insight-tag tag-rt">Milliseconds</span></h3>
+        <p>Calculates metrics from a <strong>single record in milliseconds</strong>, relying on real-time Data Graphs. Used when a decision must be made the instant a record is created or updated — e.g., next best action at the point of call.</p>
+        <div class="insight-use">Best for: in-the-moment decisions, live agent assistance, real-time personalization</div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <div class="dc-table-wrap">
+        <table class="dc-table">
+          <thead>
+            <tr><th>Insight Type</th><th>Processing Model</th><th>Latency</th><th>Data Dependency</th><th>Use Case Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Calculated Insights</td><td>Batch</td><td>Hours</td><td>Full DMO dataset</td><td>Customer Lifetime Value, 12-month purchase history</td></tr>
+            <tr><td>Streaming Insights</td><td>Micro-batch / Continuous</td><td>Seconds–Minutes</td><td>Incoming event stream</td><td>Real-time engagement score, cart activity</td></tr>
+            <tr><td>Real-Time Insights</td><td>Single-record compute</td><td>Milliseconds</td><td>Real-Time Data Graph</td><td>Next Best Action at point of contact</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. GOVERNANCE ── -->
+  <section id="governance">
+    <div class="section-header">
+      <div class="section-icon icon-rose">🛡️</div>
+      <div>
+        <h2>Governance, Security &amp; Organization</h2>
+        <p>Data Spaces, access control, masking, and lineage</p>
+      </div>
+    </div>
+    <div class="gov-grid">
+
+      <div class="gov-card">
+        <h3>🗂️ Data Spaces <span class="dc-tag tag-cyan">Partitioning</span></h3>
+        <p>Logical partitions that segregate data, metadata, and processes — for example by brand or department. Users only access contextually relevant data. Prevents cross-contamination between business units sharing one Data 360 instance.</p>
+      </div>
+
+      <div class="gov-card">
+        <h3>🏷️ Data Tagging &amp; Classification <span class="dc-tag tag-purple">Metadata</span></h3>
+        <p>Manual or AI-assisted application of metadata tags to objects and fields. Enforces governance taxonomies at scale — e.g., tagging fields as PII, GDPR-sensitive, or financial data. Enables automated policy enforcement downstream.</p>
+      </div>
+
+      <div class="gov-card">
+        <h3>🔐 Access Control <span class="dc-tag tag-rose">Security</span></h3>
+        <p><strong>RBAC</strong> (Role-Based): Access granted based on user role — e.g., Data Engineer sees all DMOs, Analyst sees only their Data Space.<br><br><strong>ABAC</strong> (Attribute-Based): Access controlled by data attributes — e.g., a field tagged "PII" is hidden from roles without PII clearance. Enforces object-level, field-level, and row-level security.</p>
+      </div>
+
+      <div class="gov-card">
+        <h3>🎭 Dynamic Data Masking <span class="dc-tag tag-amber">Privacy</span></h3>
+        <p>Conceals sensitive structured data in real-time without altering its underlying values or breaking relationships. A user without PII access sees <code>***-**-1234</code> instead of a full SSN — the data is still usable for joins and aggregations.</p>
+      </div>
+
+      <div class="gov-card">
+        <h3>🗺️ Unified Lineage <span class="dc-tag tag-green">Traceability</span></h3>
+        <p>A visual relationship graph tracing how data objects connect upstream and downstream. Shows the full journey: source connector → DLO → Transform → DMO → Insight → Activation. Essential for audits, impact assessments, and debugging data quality issues.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 7. MULTI-ORG ── -->
+  <section id="multiorg">
+    <div class="section-header">
+      <div class="section-icon icon-indigo">🏢</div>
+      <div>
+        <h2>Multi-Org Strategy — Data Cloud One</h2>
+        <p>One Home Org, multiple Companion Orgs sharing data without separate licenses</p>
+      </div>
+    </div>
+
+    <div class="org-diagram">
+      <div class="org-row">
+        <div class="org-box org-home">
+          <h4>🏠 Home Org</h4>
+          <p>Primary Salesforce org<br>Data 360 licensed here<br>Central management &amp; provisioning<br>Hosts Data Spaces</p>
+        </div>
+      </div>
+      <div class="org-arrow">⇅ Bidirectional</div>
+      <div class="org-row">
+        <div class="org-box org-companion">
+          <h4>🔗 Companion Org A</h4>
+          <p>Linked Salesforce org<br>No separate Data 360 license<br>Accesses shared Data Spaces</p>
+        </div>
+        <div class="org-box org-companion">
+          <h4>🔗 Companion Org B</h4>
+          <p>Linked Salesforce org<br>No separate Data 360 license<br>Accesses shared Data Spaces</p>
+        </div>
+        <div class="org-box org-companion">
+          <h4>🔗 Companion Org C</h4>
+          <p>Linked Salesforce org<br>No separate Data 360 license<br>Accesses shared Data Spaces</p>
+        </div>
+      </div>
+      <div class="org-label">Companion Orgs connect bidirectionally to the Home Org — sharing data and features without needing their own Data 360 instance</div>
+    </div>
+
+    <div style="margin-top:16px" class="card-grid cols-2">
+      <div class="af-card cyan-hover">
+        <h3>🏠 Home Org</h3>
+        <ul>
+          <li>Where Data 360 is <strong>provisioned and licensed</strong></li>
+          <li>Centrally manages all Data Spaces, connectors, and governance policies</li>
+          <li>Hosts the master Unified Profiles and Insights</li>
+          <li>Acts as the single source of truth for all connected orgs</li>
+        </ul>
+      </div>
+      <div class="af-card purple-hover">
+        <h3>🔗 Companion Org</h3>
+        <ul>
+          <li>Additional Salesforce org <strong>linked bidirectionally</strong> to the Home Org</li>
+          <li>No separate Data 360 license required</li>
+          <li>Can access shared Data Spaces and Unified Profiles</li>
+          <li>Use case: multi-brand company where each brand has its own org but shares customer data</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8. FULL OVERVIEW ── -->
+  <section id="overview">
+    <div class="section-header">
+      <div class="section-icon icon-cyan">🗺️</div>
+      <div>
+        <h2>Full Architecture Overview</h2>
+        <p>End-to-end data flow from source to AI activation</p>
+      </div>
+    </div>
+    <div class="mermaid-container">
+      <div id="mermaid-diagram" class="mermaid"></div>
+    </div>
+  </section>
+
+</div>
+</div><!-- /tab-architecture -->
+
+<!-- ══════════════════════════════════════════
+     TAB 2 — REAL EXAMPLE: RETAIL UNIFIED PROFILE
+══════════════════════════════════════════ -->
+<div id="tab-example" class="tab-panel">
+  <div class="content-wrap">
+
+    <!-- INTRO CARD -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:background 0.3s,border-color 0.3s;">
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">Real-World Example</div>
+      <h2 style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:10px;transition:color 0.3s;">🛍️ Retail Chain — Unified Customer Profile &amp; AI Personalization</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:860px;transition:color 0.3s;">
+        A national retail chain with e-commerce, 200 physical stores, a loyalty program, and a service contact center wants to unify all customer data to power personalized Agentforce interactions and real-time next-best-action recommendations. This walkthrough applies every Data 360 concept to a concrete architecture decision.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <a href="#ex-scenario" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏢 Scenario</a>
+        <a href="#ex-connect" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔌 Connect</a>
+        <a href="#ex-prepare" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔧 Prepare</a>
+        <a href="#ex-unify" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔗 Unify</a>
+        <a href="#ex-ai" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🧠 AI Grounding</a>
+        <a href="#ex-insights" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">⚡ Insights</a>
+        <a href="#ex-governance" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🛡️ Governance</a>
+        <a href="#ex-diagram" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🗺️ Diagram</a>
+      </div>
+    </div>
+
+    <!-- 1. SCENARIO -->
+    <section id="ex-scenario">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">🏢</div>
+        <div>
+          <h2>Scenario — The Business Problem</h2>
+          <p>What the retail chain needs and why Data 360 is the answer</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+        <div class="af-card">
+          <h3>🏪 The Company</h3>
+          <ul>
+            <li><strong>NovaMart</strong> — national retail chain, 200 stores + e-commerce site</li>
+            <li>12 million loyalty program members</li>
+            <li>3 separate Salesforce orgs: Commerce Cloud, Service Cloud, Marketing Cloud</li>
+            <li>POS system (in-store transactions) running on a legacy on-premise platform</li>
+            <li>Product catalog and inventory in an external data warehouse (Snowflake)</li>
+          </ul>
+        </div>
+        <div class="af-card">
+          <h3>❌ The Problems</h3>
+          <ul>
+            <li>A customer who buys in-store is unknown to the e-commerce and service teams</li>
+            <li>The contact center agent sees no purchase history — can't resolve complaints without asking</li>
+            <li>Marketing sends promotions without knowing what the customer already bought</li>
+            <li>Agentforce cannot answer "what did I buy last month?" — no unified data source</li>
+            <li>Same customer appears as 3 different records across orgs (email, loyalty ID, phone)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="af-card" style="margin-top:16px;">
+        <h3>✅ The Goal</h3>
+        <p style="margin-bottom:12px;">Build a <strong>Unified Customer Profile</strong> that merges online, in-store, loyalty, and service history into a single identity. Use it to:</p>
+        <div class="card-grid cols-2" style="margin-top:8px;">
+          <ul>
+            <li>Power an Agentforce service agent that knows the full purchase history</li>
+            <li>Generate a real-time "next best offer" at the moment of contact</li>
+            <li>Trigger personalized Marketing Cloud journeys based on in-store behavior</li>
+          </ul>
+          <ul>
+            <li>Give the contact center agent a 360 view without leaving Service Cloud</li>
+            <li>Segment customers by lifetime value and engagement tier</li>
+            <li>Comply with GDPR — tag and mask PII consistently across all sources</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. CONNECT -->
+    <section id="ex-connect">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">🔌</div>
+        <div>
+          <h2>Connect — How Each Source Gets In</h2>
+          <p>Choosing ingestion vs. federation per data source based on volume, frequency, and transformation needs</p>
+        </div>
+      </div>
+      <div class="dc-table-wrap">
+        <table class="dc-table">
+          <thead>
+            <tr><th>Source</th><th>Pattern</th><th>Why This Pattern</th><th>Lands in</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Salesforce CRM (Service Cloud)</td>
+              <td><span class="dc-tag tag-cyan">Data Stream</span></td>
+              <td>Native connector — data must be unified and transformed into DMOs for identity resolution</td>
+              <td>DLO → DMO (Individual, Case)</td>
+            </tr>
+            <tr>
+              <td>Commerce Cloud (e-commerce orders)</td>
+              <td><span class="dc-tag tag-cyan">Data Stream</span></td>
+              <td>Native connector — high-frequency order events need transformation and unification</td>
+              <td>DLO → DMO (Order, Product)</td>
+            </tr>
+            <tr>
+              <td>POS System (in-store transactions)</td>
+              <td><span class="dc-tag tag-cyan">Data Stream via S3</span></td>
+              <td>Legacy system exports nightly CSVs to Amazon S3 — S3 connector ingests into DLOs</td>
+              <td>DLO → Transform → DMO (Order)</td>
+            </tr>
+            <tr>
+              <td>Loyalty Program DB</td>
+              <td><span class="dc-tag tag-cyan">Data Stream</span></td>
+              <td>Loyalty IDs are the primary cross-system key — must be ingested for identity resolution</td>
+              <td>DLO → DMO (Loyalty Member)</td>
+            </tr>
+            <tr>
+              <td>Snowflake (product catalog + inventory)</td>
+              <td><span class="dc-tag tag-purple">Query Federation</span></td>
+              <td>Large dataset (5M SKUs) — no need to copy it. Query live for product lookups</td>
+              <td>Federated (no DLO)</td>
+            </tr>
+            <tr>
+              <td>Product return policy PDFs</td>
+              <td><span class="dc-tag tag-cyan">Data Stream (files)</span></td>
+              <td>Unstructured files for AI grounding — ingested as UDLOs for chunking and vectorization</td>
+              <td>UDLO → UDMO</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:16px;">
+        <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Key Decision</span>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">The Snowflake product catalog uses <strong>Query Federation</strong> — not ingestion — because it's large, rarely changes, and only needed for ad-hoc lookups. Copying 5M SKUs into Data 360 would waste storage and add ETL overhead with no benefit. Federated queries hit Snowflake directly at query time.</p>
+      </div>
+    </section>
+
+    <!-- 3. PREPARE -->
+    <section id="ex-prepare">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🔧</div>
+        <div>
+          <h2>Prepare — DLOs, DMOs &amp; FQKs</h2>
+          <p>Mapping raw data into the harmonized Customer 360 model</p>
+        </div>
+      </div>
+      <div class="dc-table-wrap">
+        <table class="dc-table">
+          <thead>
+            <tr><th>DLO (Raw)</th><th>Source</th><th>Transform</th><th>DMO (Harmonized)</th><th>FQK Key Qualifier</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>crm_contact_raw</td>
+              <td>Service Cloud</td>
+              <td>Map name, email, phone to standard fields</td>
+              <td>Individual</td>
+              <td>CRM_SF</td>
+            </tr>
+            <tr>
+              <td>loyalty_member_raw</td>
+              <td>Loyalty DB</td>
+              <td>Map loyalty_id, email, tier to standard fields</td>
+              <td>Individual + LoyaltyMember</td>
+              <td>LOYALTY</td>
+            </tr>
+            <tr>
+              <td>ecom_order_raw</td>
+              <td>Commerce Cloud</td>
+              <td>Map order_id, customer_id, line items to standard</td>
+              <td>SalesOrder + SalesOrderProduct</td>
+              <td>ECOM</td>
+            </tr>
+            <tr>
+              <td>pos_transaction_raw</td>
+              <td>S3 (nightly CSV)</td>
+              <td>Normalize date format, map store_id to location, resolve currency</td>
+              <td>SalesOrder + SalesOrderProduct</td>
+              <td>POS</td>
+            </tr>
+            <tr>
+              <td>crm_case_raw</td>
+              <td>Service Cloud</td>
+              <td>Map case subject, status, resolution to standard fields</td>
+              <td>Case</td>
+              <td>CRM_SF</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px 20px;margin-top:16px;">
+        <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Why FQKs Matter Here</span>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">A customer with <strong>order ID 1001</strong> exists in both Commerce Cloud (key qualifier <code>ECOM</code>) and the POS system (key qualifier <code>POS</code>). Without FQKs, both records would collide. With FQKs: <code>ECOM_1001</code> and <code>POS_1001</code> are globally unique — they can both map to the same Unified Individual after identity resolution without overwriting each other.</p>
+      </div>
+    </section>
+
+    <!-- 4. UNIFY -->
+    <section id="ex-unify">
+      <div class="section-header">
+        <div class="section-icon icon-amber">🔗</div>
+        <div>
+          <h2>Unify — Identity Resolution &amp; Data Graphs</h2>
+          <p>Merging 3 records of the same person into one Unified Profile</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2" style="margin-bottom:16px;">
+        <div class="af-card">
+          <h3>🔍 Match Rules</h3>
+          <p style="margin-bottom:10px;">The identity resolution ruleset for NovaMart runs in order:</p>
+          <ul>
+            <li><strong>Rule 1 — Exact email match:</strong> same email in CRM, loyalty, and e-commerce → merge</li>
+            <li><strong>Rule 2 — Phone + last name:</strong> same mobile number and last name across sources → merge</li>
+            <li><strong>Rule 3 — Loyalty ID cross-reference:</strong> loyalty_id stored in Commerce Cloud profile → merge</li>
+            <li><strong>Rule 4 — Fuzzy name + address:</strong> probabilistic match for customers without email</li>
+          </ul>
+        </div>
+        <div class="af-card">
+          <h3>⚖️ Reconciliation Rules</h3>
+          <p style="margin-bottom:10px;">When two sources have conflicting values for the same field, reconciliation determines which "wins":</p>
+          <ul>
+            <li><strong>Email:</strong> most recently updated source wins</li>
+            <li><strong>Phone:</strong> Loyalty DB wins (most accurate — customers update it for rewards)</li>
+            <li><strong>Full Name:</strong> Commerce Cloud wins (captured at checkout, most recent)</li>
+            <li><strong>Address:</strong> POS wins (captured in-store at time of purchase)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="af-card" style="margin-bottom:16px;">
+        <h3>🧩 The Result — Unified Individual: Sarah Chen</h3>
+        <div class="dc-table-wrap" style="margin-top:10px;">
+          <table class="dc-table">
+            <thead><tr><th>Source Record</th><th>Source Key</th><th>Matched Via</th><th>Merged Into</th></tr></thead>
+            <tbody>
+              <tr><td>CRM Contact — Sarah Chen</td><td>CRM_SF_00301</td><td>Email: sarah@novamail.com</td><td rowspan="3" style="vertical-align:middle;font-weight:700;color:var(--accent);">Unified Individual<br>UI_sarah_chen_0042</td></tr>
+              <tr><td>Loyalty Member — S.Chen #LY-44821</td><td>LOYALTY_LY-44821</td><td>Email + loyalty_id in Commerce Cloud</td></tr>
+              <tr><td>Commerce Customer — sarah@novamail.com</td><td>ECOM_CC-9912</td><td>Email exact match</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="af-card">
+        <h3>🕸️ Data Graph — Real-Time Profile for Agentforce</h3>
+        <p style="margin-bottom:10px;">A Data Graph is configured to pre-join Sarah's Unified Individual with her last 90 days of orders (both online and in-store) and her open cases. This materialized JSON snapshot is what the Agentforce service agent queries in milliseconds when Sarah calls in.</p>
+        <ul>
+          <li><strong>Refresh rate:</strong> Near real-time (updates within minutes of a new transaction)</li>
+          <li><strong>Used by:</strong> Real-Time Insights (next best action) and Agentforce service agent</li>
+          <li><strong>Contains:</strong> Unified Individual fields + SalesOrders (90d) + Cases (open)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. AI GROUNDING -->
+    <section id="ex-ai">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🧠</div>
+        <div>
+          <h2>AI Grounding — Unstructured Data for Agentforce</h2>
+          <p>How product return policies and FAQs become RAG-ready knowledge</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2" style="margin-bottom:16px;">
+        <div class="af-card">
+          <h3>📁 Unstructured Sources</h3>
+          <ul>
+            <li><strong>Return policy PDFs</strong> — one per product category (Electronics, Apparel, Home)</li>
+            <li><strong>FAQ HTML pages</strong> — customer service knowledge base (200+ articles)</li>
+            <li><strong>Store location guides</strong> — hours, services, accessibility info per store</li>
+            <li><strong>Promotion terms PDFs</strong> — legal terms for seasonal campaigns</li>
+          </ul>
+        </div>
+        <div class="af-card">
+          <h3>🔧 Processing Pipeline</h3>
+          <ul>
+            <li>Files land in <strong>UDLOs</strong> (one per content type)</li>
+            <li>UDLOs grouped into <strong>UDMOs</strong>: "Service Knowledge" and "Store Information"</li>
+            <li>Each UDMO is <strong>chunked</strong> respecting HTML heading structure (H1–H3)</li>
+            <li>Chunks are <strong>vectorized</strong> → stored in a Hybrid Search Index</li>
+            <li>Two <strong>Retrievers</strong> wired to Agentforce: one per UDMO scope</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;transition:background 0.3s,border-color 0.3s;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:14px;">RAG in Action — "Can I return these headphones?"</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="background:rgba(0,161,224,0.08);border:1px solid rgba(0,161,224,0.2);border-radius:8px;padding:10px 14px;font-size:0.82rem;">
+            <strong style="color:var(--accent);">👤 Sarah:</strong> <span style="color:var(--muted);">"I bought headphones 3 weeks ago in-store. Can I return them?"</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);padding:0 4px;font-style:italic;">→ Retriever queries "Service Knowledge" UDMO for "headphones return policy"</div>
+          <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:10px 14px;font-size:0.82rem;">
+            <strong style="color:#a78bfa;">📄 Retrieved chunk:</strong> <span style="color:var(--muted);">Electronics — 30-day return window from purchase date. In-store purchase: bring receipt or loyalty card. No receipt required for Gold/Platinum loyalty members.</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);padding:0 4px;font-style:italic;">→ Agentforce reads Sarah's Unified Profile: Platinum loyalty member, purchase date 22 days ago</div>
+          <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:10px 14px;font-size:0.82rem;">
+            <strong style="color:#34d399;">🤖 Agent:</strong> <span style="color:var(--muted);">"Yes, Sarah — as a Platinum member you don't need a receipt. Your Sony WH-1000XM5 headphones purchased on April 28 are within the 30-day return window. You can return them at any store location."</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. INSIGHTS -->
+    <section id="ex-insights">
+      <div class="section-header">
+        <div class="section-icon icon-amber">⚡</div>
+        <div>
+          <h2>Insights — Three Types in Practice</h2>
+          <p>How NovaMart uses all three insight types for different business decisions</p>
+        </div>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-card insight-calc">
+          <h3>📊 Calculated Insight <span class="insight-tag tag-calc">Batch</span></h3>
+          <p><strong>Customer Lifetime Value (CLV)</strong> — runs nightly as a batch job across all 12M loyalty members. Aggregates 24 months of order history, calculates average order value, purchase frequency, and return rate. Output stored back to a DMO field (<code>clv_score</code>) on Unified Individual.</p>
+          <div class="insight-use">Used by: Marketing Cloud segmentation, loyalty tier assignment</div>
+        </div>
+        <div class="insight-card insight-stream">
+          <h3>⚡ Streaming Insight <span class="insight-tag tag-stream">Near Real-Time</span></h3>
+          <p><strong>30-day Purchase Activity Score</strong> — processes every new transaction event within seconds. Maintains a rolling 30-day engagement score that updates as each purchase, return, or browse event arrives. No need to wait for nightly batch.</p>
+          <div class="insight-use">Used by: Agentforce context (is this customer active?), in-app personalization</div>
+        </div>
+        <div class="insight-card insight-rt">
+          <h3>🚀 Real-Time Insight <span class="insight-tag tag-rt">Milliseconds</span></h3>
+          <p><strong>Next Best Offer</strong> — fires in milliseconds when Sarah's inbound call is received. Reads the real-time Data Graph (Unified Profile + recent orders) and calculates the most relevant offer from current promotions based on her purchase history and CLV tier.</p>
+          <div class="insight-use">Used by: Agentforce service agent — surfaces offer before agent responds</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. GOVERNANCE -->
+    <section id="ex-governance">
+      <div class="section-header">
+        <div class="section-icon icon-rose">🛡️</div>
+        <div>
+          <h2>Governance — How NovaMart Handles PII &amp; Compliance</h2>
+          <p>Data Spaces, tagging, masking, and access control in practice</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2" style="margin-bottom:16px;">
+        <div class="af-card">
+          <h3>🗂️ Data Spaces</h3>
+          <p style="margin-bottom:10px;">NovaMart runs one Data 360 instance (Home Org) shared by multiple business units. Data Spaces partition the data:</p>
+          <ul>
+            <li><strong>Retail Operations</strong> — POS transactions, store data, inventory</li>
+            <li><strong>Customer Experience</strong> — Unified Profiles, cases, loyalty</li>
+            <li><strong>Marketing</strong> — segments, campaign history, engagement scores</li>
+          </ul>
+          <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">The Marketing team cannot query raw POS data — they only see aggregated segments from the Customer Experience space.</p>
+        </div>
+        <div class="af-card">
+          <h3>🏷️ PII Tagging &amp; Masking</h3>
+          <p style="margin-bottom:10px;">Fields tagged as PII at the DMO level:</p>
+          <ul>
+            <li><code>Individual.email</code> → tagged PII, GDPR</li>
+            <li><code>Individual.mobile_phone</code> → tagged PII, GDPR</li>
+            <li><code>Individual.date_of_birth</code> → tagged PII, GDPR, HIPAA</li>
+            <li><code>SalesOrder.billing_address</code> → tagged PII</li>
+          </ul>
+          <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Dynamic Data Masking is applied: a Marketing analyst running a query sees <code>s***@novamail.com</code> — the email is usable for matching but not readable. The full value is only visible to roles with PII clearance.</p>
+        </div>
+      </div>
+      <div class="af-card">
+        <h3>🔐 Access Control — RBAC + ABAC Combined</h3>
+        <div class="dc-table-wrap" style="margin-top:10px;">
+          <table class="dc-table">
+            <thead><tr><th>Role</th><th>Data Space Access</th><th>PII Fields</th><th>Masking Applied</th></tr></thead>
+            <tbody>
+              <tr><td>Data Engineer</td><td>All spaces</td><td>Full access (RBAC)</td><td>None</td></tr>
+              <tr><td>Marketing Analyst</td><td>Marketing only</td><td>No PII clearance (ABAC)</td><td>Email, phone masked</td></tr>
+              <tr><td>Service Agent (Agentforce)</td><td>Customer Experience</td><td>Email + phone visible (needed for contact)</td><td>DOB masked</td></tr>
+              <tr><td>Store Manager</td><td>Retail Operations</td><td>No PII clearance (ABAC)</td><td>All PII masked</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. DIAGRAM -->
+    <section id="ex-diagram">
+      <div class="section-header">
+        <div class="section-icon icon-cyan">🗺️</div>
+        <div>
+          <h2>Full Architecture Diagram — NovaMart</h2>
+          <p>End-to-end flow from raw sources to Agentforce response</p>
+        </div>
+      </div>
+      <div class="mermaid-container">
+        <div id="mermaid-example" class="mermaid"></div>
+      </div>
+    </section>
+
+  </div>
+</div><!-- /tab-example -->
+
+<footer class="af-footer">
+  Data 360 Architecture Reference · Salesforcepedia · 2026
+</footer>
+
+<script>
+  const DIAGRAM_SOURCE = `flowchart TD
+    subgraph SOURCES["📡 Data Sources"]
+      S1[Salesforce CRM] & S2[Amazon S3] & S3[Google Cloud Storage] & S4[External Data Lakes]
+    end
+
+    subgraph CONNECT["🔌 Connect — Ingest & Federate"]
+      DS[Data Streams\\nCopy into Data 360]
+      ZC[Zero Copy Federation\\nQuery / File]
+      CACHE[Caching / Acceleration]
+      ZC --> CACHE
+    end
+
+    subgraph PREPARE["🔧 Prepare & Model"]
+      DLO[DLOs\\nRaw Data]
+      UDLO[UDLOs\\nUnstructured Files]
+      XFORM[Data Transforms\\nBatch / Streaming]
+      FQK[Fully Qualified Keys FQK]
+      DLO --> XFORM
+      XFORM --> FQK
+    end
+
+    subgraph MODEL["📐 Data Model"]
+      DMO[DMOs\\nHarmonized]
+      UDMO[UDMOs\\nGrouped Unstructured]
+    end
+
+    subgraph AI_PIPE["🧠 AI Grounding Pipeline"]
+      CHUNK[Chunk & Vectorize]
+      IDX[Search Index\\nVector / Hybrid]
+      RTV[Retrievers]
+      CHUNK --> IDX --> RTV
+    end
+
+    subgraph UNIFY["🔗 Unify"]
+      IR[Identity Resolution\\nMatch + Reconcile]
+      UP[Unified Profiles\\nUnified Individual]
+      DG[Data Graphs\\nMaterialized JSON]
+      IR --> UP --> DG
+    end
+
+    subgraph INSIGHTS["⚡ Analyze"]
+      CI[Calculated Insights\\nBatch — Historical]
+      SI[Streaming Insights\\nNear Real-Time]
+      RTI[Real-Time Insights\\nMilliseconds]
+    end
+
+    subgraph GOVERN["🛡️ Governance"]
+      DS_GOV[Data Spaces\\nPartitions]
+      TAG[Tagging & Classification]
+      MASK[Dynamic Data Masking]
+      LIN[Unified Lineage]
+    end
+
+    subgraph ACT["🚀 Activate & Act"]
+      AGENT[Agentforce\\nAI Agents]
+      PROMPT[Prompt Builder\\nTemplates]
+      MKT[Marketing Activation]
+      ANALYTICS[CRM Analytics\\nDashboards]
+    end
+
+    SOURCES --> DS & ZC
+    DS --> DLO & UDLO
+    ZC --> DLO
+    FQK --> DMO
+    UDLO --> UDMO --> CHUNK
+    DMO --> IR
+    DG --> RTI
+    DMO --> CI & SI
+    RTV --> AGENT & PROMPT
+    UP --> MKT & ANALYTICS & AGENT
+    GOVERN -.->|enforces across all layers| PREPARE & MODEL & UNIFY & INSIGHTS`;
+
+  const DARK_VARS = {
+    primaryColor: '#0f1f3d',
+    primaryTextColor: '#e2e8f0',
+    primaryBorderColor: '#06b6d4',
+    lineColor: '#06b6d4',
+    secondaryColor: '#0c1220',
+    tertiaryColor: '#080e1c',
+    background: '#080e1c',
+    mainBkg: '#0c1220',
+    nodeBorder: '#06b6d4',
+    clusterBkg: '#0c1220',
+    titleColor: '#e2e8f0',
+    edgeLabelBackground: '#0c1220',
+  };
+
+  const LIGHT_VARS = {
+    primaryColor: '#dbeafe',
+    primaryTextColor: '#0f172a',
+    primaryBorderColor: '#0284c7',
+    lineColor: '#0284c7',
+    secondaryColor: '#f0f9ff',
+    tertiaryColor: '#f0f7fa',
+    background: '#f0f7fa',
+    mainBkg: '#ffffff',
+    nodeBorder: '#0284c7',
+    clusterBkg: '#f0f9ff',
+    titleColor: '#0f172a',
+    edgeLabelBackground: '#ffffff',
+  };
+
+  function getMermaidTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? 'default' : 'dark';
+  }
+
+  function getMermaidVars() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? LIGHT_VARS : DARK_VARS;
+  }
+
+  async function renderMermaid() {
+    const container = document.getElementById('mermaid-diagram');
+    container.removeAttribute('data-processed');
+    container.innerHTML = DIAGRAM_SOURCE;
+    mermaid.initialize({ startOnLoad: false, theme: getMermaidTheme(), themeVariables: getMermaidVars() });
+    await mermaid.run({ nodes: [container] });
+  }
+
+  const EXAMPLE_DIAGRAM_SOURCE = `flowchart TD
+    subgraph SOURCES["Data Sources"]
+      CRM[Service Cloud\\nCRM Contacts + Cases]
+      ECOM[Commerce Cloud\\nOnline Orders]
+      POS[POS via S3\\nIn-Store Transactions]
+      LOY[Loyalty DB\\nMembers + Tier]
+      SNOW[Snowflake\\nProduct Catalog]
+      DOCS[PDFs + HTML\\nReturn Policies + FAQs]
+    end
+
+    subgraph CONNECT["Connect"]
+      DS1[Data Stream\\nCRM]
+      DS2[Data Stream\\nCommerce]
+      DS3[Data Stream\\nS3 CSV]
+      DS4[Data Stream\\nLoyalty]
+      FED[Query Federation\\nSnowflake]
+      DS5[Data Stream\\nFiles to UDLO]
+    end
+
+    subgraph PREPARE["Prepare - DLO to DMO"]
+      DLO1[DLO crm raw]
+      DLO2[DLO ecom raw]
+      DLO3[DLO pos raw]
+      DLO4[DLO loyalty raw]
+      UDLO1[UDLO return policies]
+      XFORM[Data Transforms\\nNormalize + FQK]
+      DMO_IND[DMO Individual]
+      DMO_ORD[DMO SalesOrder]
+      DMO_CASE[DMO Case]
+      UDMO[UDMO Service Knowledge]
+    end
+
+    subgraph UNIFY["Unify"]
+      IR[Identity Resolution\\nEmail + Phone + LoyaltyID]
+      UP[Unified Individual\\nSarah Chen UI-0042]
+      DG[Data Graph\\nProfile + Orders + Cases]
+    end
+
+    subgraph AI_PIPE["AI Grounding"]
+      CHUNK[Chunk and Vectorize]
+      IDX[Hybrid Search Index]
+      RTV[Retriever\\nService Knowledge]
+    end
+
+    subgraph INSIGHTS["Insights"]
+      CI[Calculated Insight\\nCLV Score - Nightly]
+      SI[Streaming Insight\\n30-day Activity Score]
+      RTI[Real-Time Insight\\nNext Best Offer]
+    end
+
+    subgraph ACT["Activate"]
+      AGENT[Agentforce\\nService Agent]
+      MKT[Marketing Cloud\\nPersonalized Journeys]
+    end
+
+    CRM --> DS1 --> DLO1
+    ECOM --> DS2 --> DLO2
+    POS --> DS3 --> DLO3
+    LOY --> DS4 --> DLO4
+    SNOW --> FED
+    DOCS --> DS5 --> UDLO1
+
+    DLO1 & DLO2 & DLO3 & DLO4 --> XFORM
+    XFORM --> DMO_IND & DMO_ORD & DMO_CASE
+    UDLO1 --> UDMO --> CHUNK --> IDX --> RTV
+
+    DMO_IND --> IR --> UP --> DG
+    DMO_ORD & DMO_CASE --> DG
+
+    DG --> RTI
+    DMO_IND --> CI & SI
+
+    RTV --> AGENT
+    DG --> AGENT
+    RTI --> AGENT
+    UP --> MKT`;
+
+  async function renderExampleMermaid() {
+    const container = document.getElementById('mermaid-example');
+    if (!container) return;
+    container.removeAttribute('data-processed');
+    container.innerHTML = EXAMPLE_DIAGRAM_SOURCE;
+    mermaid.initialize({ startOnLoad: false, theme: getMermaidTheme(), themeVariables: getMermaidVars() });
+    await mermaid.run({ nodes: [container] });
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    if (tabId === 'example') setTimeout(renderExampleMermaid, 50);
+  }
+  window.switchTab = switchTab;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderMermaid();
+
+    const observer = new MutationObserver(() => {
+      renderMermaid();
+      renderExampleMermaid();
+    });
+
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  });
+</script>
+
+</body>
+</html>

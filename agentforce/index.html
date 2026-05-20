@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <script src="../js/theme.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentforce Architecture — Salesforcepedia</title>
+  <meta name="description" content="Agentforce architecture patterns: hybrid reasoning model, blueprint hierarchy, deterministic sandwich, RAG strategy, Classic Model vs Agent Script — with a full banking agent example.">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="../vendor/mermaid/mermaid.min.js"></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html" class="brand">Salesforce<span>pedia</span></a>
+  <a href="../index.html" class="nav-link">Home</a>
+  <a href="#" class="nav-link active">Agentforce</a>
+  <span class="badge">AI</span>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+</nav>
+
+<a href="../index.html" class="back-link">← Back to Home</a>
+
+<div class="page-hero" style="padding-left:0;padding-right:0;">
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;">
+    <div class="eyebrow">Agentforce Architecture</div>
+    <h1>Hybrid Reasoning · Blueprint Hierarchy · Classic &amp; Script Models · Best Practices</h1>
+    <p>A structured reference for designing production-grade Agentforce agents — from the deterministic sandwich pattern to RAG data strategy.</p>
+  </div>
+</div>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('concepts', this)">📘 Concepts</button>
+  <button class="tab-btn" onclick="switchTab('agents', this)">🤖 Agent Types</button>
+  <button class="tab-btn" onclick="switchTab('example', this)">🏦 Real Example — Banking Agent</button>
+</div>
+
+<div id="tab-concepts" class="tab-panel active">
+
+  <div class="content-wrap">
+
+    <!-- INTRO CARD + MODEL SWITCHER -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:background 0.3s,border-color 0.3s;">
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">Agentforce Concepts</div>
+      <h2 style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:10px;transition:color 0.3s;">📘 Architecture Patterns &amp; Reference</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:860px;transition:color 0.3s;">
+        Hybrid reasoning, blueprint hierarchy, the deterministic sandwich pattern, RAG strategy, and best practices.
+        Some sections differ between models — use the switcher to show the version relevant to you.
+      </p>
+      <!-- Model switcher -->
+      <div style="display:flex;gap:8px;margin-top:18px;">
+        <button id="concepts-btn-classic" onclick="switchConcepts('classic')"
+          style="padding:8px 18px;font-size:0.82rem;font-weight:700;border-radius:8px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;">
+          🏛️ Classic Model
+        </button>
+        <button id="concepts-btn-script" onclick="switchConcepts('script')"
+          style="padding:8px 18px;font-size:0.82rem;font-weight:700;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;">
+          📄 Agent Script
+        </button>
+      </div>
+      <div id="concepts-model-label" style="margin-top:10px;font-size:0.78rem;color:var(--muted);">
+        Showing: <strong style="color:var(--text);">Classic Model</strong> — configure everything in the Agentforce Builder UI, no code files required.
+      </div>
+      <!-- Anchor nav — Classic -->
+      <div id="concepts-nav-classic" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <a href="#hybrid" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🧠 Hybrid Reasoning</a>
+        <a href="#agentscript" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📄 Authoring</a>
+        <a href="#blueprint" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏗️ Blueprint</a>
+        <a href="#sandwich" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🥪 Sandwich</a>
+        <a href="#variables" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📦 State</a>
+        <a href="#transitions" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔀 Routing</a>
+        <a href="#flow" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">⚙️ Execution Flow</a>
+        <a href="#rag" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📚 RAG</a>
+        <a href="#bestpractices" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏆 Best Practices</a>
+        <a href="#overview" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🗺️ Overview</a>
+      </div>
+      <!-- Anchor nav — Agent Script -->
+      <div id="concepts-nav-script" style="display:none;flex-wrap:wrap;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <a href="#hybrid" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🧠 Hybrid Reasoning</a>
+        <a href="#agentscript" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📄 Agent Script</a>
+        <a href="#blueprint" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏗️ Blueprint</a>
+        <a href="#sandwich" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🥪 Sandwich</a>
+        <a href="#variables" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📦 Variables</a>
+        <a href="#transitions" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🔀 Transitions</a>
+        <a href="#flow" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">⚙️ Execution Flow</a>
+        <a href="#rag" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">📚 RAG</a>
+        <a href="#bestpractices" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🏆 Best Practices</a>
+        <a href="#overview" style="font-size:0.78rem;color:var(--accent);text-decoration:none;padding:4px 12px;border:1px solid var(--border);border-radius:20px;transition:all 0.2s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)';this.style.borderColor='var(--accent)';" onmouseout="this.style.background='';this.style.color='var(--accent)';this.style.borderColor='var(--border)';">🗺️ Overview</a>
+      </div>
+    </div>
+
+    <!-- 1. HYBRID REASONING -->
+    <section id="hybrid">
+      <div class="section-header">
+        <div class="section-icon icon-blue">🧠</div>
+        <div>
+          <h2>Hybrid Reasoning Model</h2>
+          <p>Agentforce blends probabilistic LLM flexibility with deterministic rule-based control</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+        <div class="af-card">
+          <h3>🎲 Probabilistic Reasoning <span class="badge-blue">LLM / Flexibility</span></h3>
+          <ul>
+            <li><strong>What:</strong> Uses Large Language Models for natural language and intent</li>
+            <li><strong>Where:</strong> Within Instructions and initial language comprehension</li>
+            <li><strong>When:</strong> For <em>Behavior</em> — tone, conversation flow, unpredictable inputs</li>
+            <li>Adapts to varied user inputs naturally</li>
+            <li>Generates fluid, contextual responses</li>
+            <li>Routes requests to appropriate subagents</li>
+          </ul>
+        </div>
+        <div class="af-card">
+          <h3>🔒 Deterministic Execution <span class="badge-orange">Rules / Control</span></h3>
+          <ul>
+            <li><strong>What:</strong> Hard-coded, predictable, rules-based software logic</li>
+            <li><strong>Where:</strong> Within Agentforce Script and Actions</li>
+            <li><strong>When:</strong> For <em>Control</em> — mandatory sequences, calculations, DB updates</li>
+            <li>Enforces sensitive business rules</li>
+            <li>Handles complex calculations reliably</li>
+            <li>Manages explicit state transitions</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:16px;">
+        <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 The Core Mental Model</span>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;"><strong style="color:var(--text);">LLM = Behavior. Code = Control.</strong> Every design decision in Agentforce comes back to this. If the outcome must be predictable and traceable — use code. If the input is open-ended and human — use the LLM. This distinction drives every design decision in Agentforce.</p>
+      </div>
+    </section>
+
+    <!-- 2. AGENT SCRIPT / AUTHORING -->
+    <section id="agentscript">
+      <div class="section-header">
+        <div class="section-icon icon-orange">📄</div>
+        <div>
+          <h2 id="agentscript-heading">Authoring in Builder</h2>
+          <p id="agentscript-subtitle">Configure everything visually in the Agentforce Builder UI — no code files required</p>
+        </div>
+      </div>
+
+      <!-- Evolution banner -->
+      <div style="background:rgba(0,161,224,0.07);border:1px solid rgba(0,161,224,0.3);border-radius:12px;padding:20px 24px;margin-bottom:24px;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">⚠️ Two Valid Models — Know the Difference</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:6px;">Classic Model <span style="font-size:0.7rem;background:rgba(100,116,139,0.2);color:var(--muted);padding:2px 7px;border-radius:6px;font-weight:500;margin-left:6px;">Original / Widely Available</span></div>
+            <ul style="list-style:none;padding:0;font-size:0.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px;">
+              <li style="padding-left:14px;position:relative;">→ Configure everything in <strong style="color:var(--text);">Agentforce Builder UI</strong></li>
+              <li style="padding-left:14px;position:relative;">→ Instructions: free-text field, natural language only</li>
+              <li style="padding-left:14px;position:relative;">→ Actions: Flows, Apex, Prompt Templates — separate configs</li>
+              <li style="padding-left:14px;position:relative;">→ Sandwich is a <em>design pattern</em>, enforced via Flows</li>
+              <li style="padding-left:14px;position:relative;">→ No code in the agent definition itself</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:6px;">Agent Script <span style="font-size:0.7rem;background:rgba(0,161,224,0.2);color:var(--accent);padding:2px 7px;border-radius:6px;font-weight:500;margin-left:6px;">Newer / Evolving</span></div>
+            <ul style="list-style:none;padding:0;font-size:0.82rem;color:var(--muted);display:flex;flex-direction:column;gap:4px;">
+              <li style="padding-left:14px;position:relative;">→ Single <strong style="color:var(--text);">text file</strong> per subagent (editable in Builder or VS Code)</li>
+              <li style="padding-left:14px;position:relative;">→ Instructions: <code>|</code> pipe lines — same concept, now in code</li>
+              <li style="padding-left:14px;position:relative;">→ Actions, variables, logic all in one place</li>
+              <li style="padding-left:14px;position:relative;">→ Sandwich is <em>enforced in code</em> via <code>before_reasoning:</code> / <code>after_reasoning:</code></li>
+              <li style="padding-left:14px;position:relative;">→ Requires Agent Script-enabled org / Agentforce DX</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,161,224,0.2);font-size:0.8rem;color:var(--accent);">
+          💡 Both models express the same architectural patterns. What matters is your <em>reasoning</em> — why deterministic here, why LLM there — not whether you use <code>before_reasoning:</code> or a Flow. Master the pattern, then the syntax follows.
+        </div>
+      </div>
+      <!-- CLASSIC panel -->
+      <div id="concepts-agentscript-classic">
+        <div class="card-grid cols-2">
+          <div class="af-card">
+            <h3>Authoring in Builder UI</h3>
+            <p style="margin-bottom:10px;">In the Classic Model, you configure everything through the Agentforce Builder visual interface — no code files, no syntax to learn.</p>
+            <ul>
+              <li><strong>Agent Profile</strong> — name, persona, channels, system prompt</li>
+              <li><strong>Subagents</strong> — classification description, scope, 1–3 instructions in a text field</li>
+              <li><strong>Actions</strong> — each configured separately: Flow, Apex, or Prompt Template</li>
+              <li><strong>Instructions field</strong> — plain English, 1–3 guidelines per subagent</li>
+            </ul>
+          </div>
+          <div class="af-card">
+            <h3>How Instructions Work</h3>
+            <p style="margin-bottom:10px;">In the Classic Model, instructions are plain text written in the Builder UI. The LLM reads them as behavioral guidelines.</p>
+            <ul>
+              <li>Written as natural language — "Always invoke X before Y"</li>
+              <li>Use "always" / "never" sparingly — they carry heavy weight</li>
+              <li>Reference Action API names exactly for correct matching</li>
+              <li>Keep to 1–3 per subagent — more creates noise and confusion</li>
+              <li>Cannot enforce execution order — use Flows for mandatory sequences</li>
+            </ul>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">The LLM reads instructions as context — it interprets them probabilistically. For deterministic enforcement, the logic must live in a Flow or Apex action.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel -->
+      <div id="concepts-agentscript-script" style="display:none;">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="af-card">
+            <h3>What is Agent Script?</h3>
+            <p style="margin-bottom:10px;">Agent Script is the unified file format that powers each subagent. It replaces separate Flows, Instructions text, and configuration screens with a single readable file that combines:</p>
+            <ul>
+              <li><strong>Configuration</strong> — subagent name, description, variables</li>
+              <li><strong>Business logic</strong> — deterministic rules with <code>-&gt;</code> (arrow operator)</li>
+              <li><strong>LLM instructions</strong> — natural language prompts with <code>|</code> (pipe operator)</li>
+              <li><strong>Actions</strong> — defined tools the agent can invoke</li>
+            </ul>
+          </div>
+          <div class="af-card">
+            <h3>Three Ways to Author Agent Script</h3>
+            <ul>
+              <li><strong>Chat with Agentforce</strong> — describe your agent in plain English; Agentforce Builder generates the script automatically</li>
+              <li><strong>Canvas View</strong> — visual block editor in Builder; use <code>/</code> to add expressions and <code>@</code> to reference resources</li>
+              <li><strong>Script View</strong> — direct code editor with syntax highlighting (recommended for production)</li>
+            </ul>
+            <p style="margin-top:10px;font-size:0.8rem;">Also available: <strong>Agentforce DX</strong> — VS Code extension with full Agent Script language support for local development.</p>
+          </div>
+        </div>
+        <div class="card-grid cols-2">
+          <div class="af-card">
+            <h3>Key Syntax — The Two Operators</h3>
+            <p style="margin-bottom:12px;">Agent Script has exactly two special operators that control whether a line is deterministic or sent to the LLM:</p>
+            <table class="ex-table" style="margin-top:0;">
+              <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>-&gt;</code></td>
+                  <td>Start a <strong>logic + prompt</strong> block — deterministic code before the LLM gets context. Think of it as "here's what to do with code first."</td>
+                  <td><code>-&gt; run @actions.validate_identity</code></td>
+                </tr>
+                <tr>
+                  <td><code>|</code></td>
+                  <td>A natural language <strong>prompt line</strong> — passed directly to the LLM. These are instructions to the AI, not code.</td>
+                  <td><code>| Ask the customer to confirm the charge amount and date before proceeding.</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);">Shorter instructions = more reliable. The LLM reads everything; less noise means better decisions.</p>
+          </div>
+          <div class="af-card">
+            <h3>Minimal Script Skeleton</h3>
+            <div class="ex-code" style="font-size:0.78rem;">subagent:
+  name: Report_Fraud
+  description: |
+    Handles unrecognized charges and fraud disputes.
+
+variables:
+  customer_id: mutable string = ""
+  identity_verified: mutable boolean = False
+
+subagent.actions:
+  - action: validate_identity
+    target: flow://Validate_Customer_Identity_Flow
+
+subagent.reasoning:
+  instructions:
+    -&gt;
+      if @variables.identity_verified == False
+        run @actions.validate_identity
+        set @variables.identity_verified = @outputs.verified
+      end
+    | Ask the customer to describe the suspicious charge.
+    | Confirm the exact amount and date before opening a dispute.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BLUEPRINT / ARCHITECTURE HIERARCHY -->
+    <section id="blueprint">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🏗️</div>
+        <div>
+          <h2>Agent Blueprint / Architecture</h2>
+          <p>Hierarchical structure of concepts nested within Agentforce Builder</p>
+        </div>
+      </div>
+
+      <!-- CLASSIC panel -->
+      <div id="concepts-blueprint-classic">
+        <div class="hierarchy">
+          <div class="tree-node level-0">
+            <div class="tree-row">
+              <div class="tree-icon">🤖</div>
+              <div class="tree-content">
+                <h4>A. Agent Profile <span class="badge-blue" style="margin-left:8px">Top Level</span></h4>
+                <p>The overarching entity. Defines the agent's identity, persona, channels, and which Subagents it contains.</p>
+              </div>
+            </div>
+            <div class="tree-children">
+              <div class="tree-node level-1">
+                <div class="tree-row">
+                  <div class="tree-icon">🏢</div>
+                  <div class="tree-content">
+                    <h4>B. Subagents <span class="badge-purple" style="margin-left:8px">Formerly "Topics"</span></h4>
+                    <p>Specialized departments with distinct expertise. The Reasoning Engine reads each subagent's Classification Description to route the user's message to the right one.</p>
+                  </div>
+                </div>
+                <div class="tree-children">
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">💬</div>
+                      <div class="tree-content">
+                        <h4>C. Instructions <span class="badge-blue" style="margin-left:8px">Plain text in Builder UI</span></h4>
+                        <p>1–3 natural-language guidelines written in the Builder UI. The LLM reads them as behavioral guidance — tone, action selection, what to do/avoid. Probabilistic, not enforced as code.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">⚡</div>
+                      <div class="tree-content">
+                        <h4>D. Actions <span class="badge-green" style="margin-left:8px">Configured separately</span></h4>
+                        <p>Each Action is configured individually in the Builder. The LLM reads the action's name and description to decide when to invoke it.</p>
+                      </div>
+                    </div>
+                    <div class="tree-children">
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔄</div>
+                          <div class="tree-content">
+                            <h4>Flow Actions <span class="badge-orange" style="margin-left:6px">Deterministic</span></h4>
+                            <p>Invoke a Salesforce Flow. Use for mandatory sequences, data writes, identity checks — logic that must be deterministic.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔧</div>
+                          <div class="tree-content">
+                            <h4>Apex Actions <span class="badge-orange" style="margin-left:6px">Deterministic</span></h4>
+                            <p>Invoke an Apex class method. Use for complex calculations, integrations, or business rules that need full programmatic control.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">✏️</div>
+                          <div class="tree-content">
+                            <h4>Prompt Template Actions <span class="badge-blue" style="margin-left:6px">LLM-enhanced</span></h4>
+                            <p>Use an Einstein Prompt Template to generate structured AI output — summaries, drafts, classifications — grounded in Salesforce data.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔌</div>
+                          <div class="tree-content">
+                            <h4>MuleSoft / API Actions</h4>
+                            <p>Connect to external systems via MuleSoft integrations or REST APIs configured as Named Credentials.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">📚</div>
+                      <div class="tree-content">
+                        <h4>E. Data &amp; Context <span class="badge-purple" style="margin-left:8px">RAG</span></h4>
+                        <p>Data Libraries (ADL) + Retrievers for Retrieval Augmented Generation — grounds the LLM in your org's knowledge.</p>
+                      </div>
+                    </div>
+                    <div class="tree-children">
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🗄️</div>
+                          <div class="tree-content">
+                            <h4>Agentforce Data Libraries (ADL)</h4>
+                            <p>Indexes structured data (Cases, Knowledge Articles) and unstructured data (PDFs, HTML) for vector search.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔍</div>
+                          <div class="tree-content">
+                            <h4>Retrievers</h4>
+                            <p>Bridge between the search index and the prompt — injects relevant chunks into the LLM's context at inference time.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel -->
+      <div id="concepts-blueprint-script" style="display:none;">
+        <div class="hierarchy">
+          <div class="tree-node level-0">
+            <div class="tree-row">
+              <div class="tree-icon">🤖</div>
+              <div class="tree-content">
+                <h4>A. Agent Profile <span class="badge-blue" style="margin-left:8px">Top Level</span></h4>
+                <p>The overarching entity. Defines the agent's identity, persona, channels, and which Subagents it contains.</p>
+              </div>
+            </div>
+            <div class="tree-children">
+              <div class="tree-node level-1">
+                <div class="tree-row">
+                  <div class="tree-icon">🏢</div>
+                  <div class="tree-content">
+                    <h4>B. Subagents <span class="badge-purple" style="margin-left:8px">Formerly "Topics"</span></h4>
+                    <p>Specialized departments with distinct expertise. The Reasoning Engine reads each subagent's Classification Description to route the user's message to the right one.</p>
+                  </div>
+                </div>
+                <div class="tree-children">
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">📄</div>
+                      <div class="tree-content">
+                        <h4>C. Agentforce Script <span class="badge-blue" style="margin-left:8px">One file per subagent</span></h4>
+                        <p>A single text file that combines configuration, variables, deterministic logic (<code>-&gt;</code>), LLM instructions (<code>|</code>), and action definitions. Replaces the separate screens in Classic.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">⚡</div>
+                      <div class="tree-content">
+                        <h4>D. Actions <span class="badge-green" style="margin-left:8px">Two blocks in the script</span></h4>
+                        <p>Actions are declared inside the script file. There are two distinct blocks depending on who decides when to call them.</p>
+                      </div>
+                    </div>
+                    <div class="tree-children">
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔒</div>
+                          <div class="tree-content">
+                            <h4>subagent.actions <span class="badge-orange" style="margin-left:6px">Deterministic</span></h4>
+                            <p>Called explicitly in logic blocks with <code>run @actions.x</code>. You control exactly when they fire. Use for mandatory steps: auth, data writes, logging.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🧠</div>
+                          <div class="tree-content">
+                            <h4>subagent.reasoning.actions <span class="badge-blue" style="margin-left:6px">LLM Tools</span></h4>
+                            <p>Exposed to the LLM as available tools. The LLM reads each action's <code>description</code> and decides when to invoke it. Use for optional lookups, search, retrieval.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔀</div>
+                          <div class="tree-content">
+                            <h4>Action Targets</h4>
+                            <p>Each action points to a target: <code>flow://Flow_API_Name</code>, <code>apex://ClassName.methodName</code>, <code>prompt://Template_Name</code>, or MuleSoft/external API endpoints.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tree-node level-2">
+                    <div class="tree-row">
+                      <div class="tree-icon">📚</div>
+                      <div class="tree-content">
+                        <h4>E. Data &amp; Context <span class="badge-purple" style="margin-left:8px">RAG</span></h4>
+                        <p>Data Libraries (ADL) + Retrievers for Retrieval Augmented Generation — grounds the LLM in your org's knowledge.</p>
+                      </div>
+                    </div>
+                    <div class="tree-children">
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🗄️</div>
+                          <div class="tree-content">
+                            <h4>Agentforce Data Libraries (ADL)</h4>
+                            <p>Indexes structured data (Cases, Knowledge Articles) and unstructured data (PDFs, HTML) for vector search.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tree-node level-3">
+                        <div class="tree-row">
+                          <div class="tree-icon">🔍</div>
+                          <div class="tree-content">
+                            <h4>Retrievers</h4>
+                            <p>Bridge between the search index and the prompt — injects relevant chunks into the LLM's context at inference time.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. DETERMINISTIC SANDWICH -->
+    <section id="sandwich">
+      <div class="section-header">
+        <div class="section-icon icon-orange">🥪</div>
+        <div>
+          <h2>Deterministic Sandwich Pattern</h2>
+          <p>Code handles the beginning and end — AI handles the middle</p>
+        </div>
+      </div>
+
+      <!-- CLASSIC panel -->
+      <div id="concepts-sandwich-classic">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="hierarchy" style="padding:28px;">
+            <div class="sandwich">
+              <div class="sandwich-layer sl-det">
+                <h4>🔒 START — Flow invoked as first Action</h4>
+                <p>A Flow runs deterministically before the LLM responds. Use for: identity verification, data lookups, mandatory pre-conditions, loading context from Salesforce records.</p>
+              </div>
+              <div class="sandwich-arrow">↓ Flow outputs available as context ↓</div>
+              <div class="sandwich-layer sl-ai">
+                <h4>🧠 MIDDLE — Instructions field (plain text)</h4>
+                <p>The LLM conversation loop. Driven by 1–3 natural-language Instructions in the Builder UI. Handles: tone, intent detection, action selection, collecting user input.</p>
+              </div>
+              <div class="sandwich-arrow">↓ instructions tell LLM what to invoke ↓</div>
+              <div class="sandwich-layer sl-det">
+                <h4>🔒 END — Flow invoked as final Action</h4>
+                <p>A closing Flow handles: writes to Salesforce, audit logs, handoffs to humans, session cleanup. Must be referenced in Instructions — the LLM is told to invoke it.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="af-card">
+            <h3>How to Enforce the Sandwich in Classic</h3>
+            <table class="ex-table" style="margin-top:8px;">
+              <thead><tr><th>Layer</th><th>Mechanism</th><th>How enforced</th></tr></thead>
+              <tbody>
+                <tr><td>🔒 START</td><td>Flow Action</td><td>Instruction: "Always invoke Validate_Customer_Identity as the first action before responding to any request."</td></tr>
+                <tr><td>🧠 MIDDLE</td><td>Instructions (text)</td><td>1–3 natural-language guidelines in the Builder UI. LLM interprets probabilistically.</td></tr>
+                <tr><td>🔒 END</td><td>Flow Action</td><td>Instruction: "After completing the request, always invoke Log_Case_Event before ending the conversation."</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top:10px;font-size:0.78rem;color:var(--muted);">The key difference from Agent Script: the END layer is not code — it relies on the LLM following your instruction. For truly mandatory logic, always use a Flow.</p>
+          </div>
+        </div>
+
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Study Tip</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">When asked to design an agent, always call out the sandwich explicitly: <em>"I'd put identity verification and mandatory data lookups in a deterministic Flow before the LLM sees any context, and all writes and audit logs in a closing Flow invoked at the END layer."</em> That language signals you understand the hybrid model regardless of which implementation you're using.</p>
+        </div>
+        <div style="background:rgba(100,116,139,0.07);border:1px solid rgba(100,116,139,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);">⚠️ Classic Model Limitation</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In the Classic Model the sandwich is a <em>design pattern</em>, not a technical guarantee. The END layer depends on Instructions correctly telling the LLM which Action to invoke and in what order. If instructions are ambiguous, the LLM may skip a step. Mandatory sequences belong in Flows — not in plain-text instructions.</p>
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel -->
+      <div id="concepts-sandwich-script" style="display:none;">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="hierarchy" style="padding:28px;">
+            <div class="sandwich">
+              <div class="sandwich-layer sl-det">
+                <h4>🔒 START — <code>before_reasoning:</code> block</h4>
+                <p>Runs before the LLM sees anything. Use for: identity verification, data lookups, loading session state, enforcing hard rules.</p>
+              </div>
+              <div class="sandwich-arrow">↓ context passed to LLM ↓</div>
+              <div class="sandwich-layer sl-ai">
+                <h4>🧠 MIDDLE — <code>reasoning.instructions:</code> block</h4>
+                <p>The LLM conversation loop. Handles: natural language, intent detection, tool selection, conversational flow, collecting user input.</p>
+              </div>
+              <div class="sandwich-arrow">↑ returns after reasoning loop exits ↑</div>
+              <div class="sandwich-layer sl-det">
+                <h4>🔒 END — <code>after_reasoning:</code> block</h4>
+                <p>Runs after every LLM response. Use for: executing writes, enforcing caps, logging, handoffs, session cleanup. Cannot contain <code>|</code> pipe lines.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="af-card">
+            <h3>Script Blocks in Code</h3>
+            <div class="ex-code" style="font-size:0.76rem;">subagent.before_reasoning:
+  # Runs deterministically before LLM gets context
+  -&gt;
+    run @actions.validate_identity
+    set @variables.customer_id = @outputs.customer_id
+    if @variables.customer_id == ""
+      transition to @subagent.End_Session
+    end
+
+subagent.reasoning:
+  instructions:
+    # Logic block — deterministic
+    -&gt;
+      if @variables.card_blocked == True
+        | The card has already been blocked.
+        | Ask if the customer wants a replacement.
+      end
+    # Pipe lines — sent to LLM
+    | Ask the customer which charge looks suspicious.
+    | Confirm the amount and date before opening a case.
+
+subagent.after_reasoning:
+  # Runs after every request — deterministic only, no | pipe
+  -&gt;
+    if @variables.case_id != ""
+      run @actions.log_case_event
+    end</div>
+            <p style="margin-top:10px;font-size:0.78rem;color:var(--muted);">The <code>before_reasoning:</code> block is equivalent to placing logic at the very top of <code>reasoning.instructions:</code>. Use it for clarity.</p>
+          </div>
+        </div>
+
+        <div class="af-card" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+          <h3>When to Use Each Block</h3>
+          <table class="ex-table" style="margin-top:8px;">
+            <thead><tr><th>Block</th><th>Use for</th><th>Can use <code>|</code> pipe?</th><th>Can run actions?</th></tr></thead>
+            <tbody>
+              <tr><td><code>before_reasoning:</code></td><td>Auth checks, data loads, pre-conditions</td><td>No</td><td>Yes</td></tr>
+              <tr><td><code>reasoning.instructions: -&gt;</code></td><td>Conditional logic inside the reasoning loop</td><td>Yes (after <code>-&gt;</code> block)</td><td>Yes</td></tr>
+              <tr><td><code>reasoning.instructions: |</code></td><td>Prompts and instructions to the LLM</td><td>Yes — this IS the pipe</td><td>No</td></tr>
+              <tr><td><code>after_reasoning:</code></td><td>Writes, logs, transitions, cleanup</td><td>No</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Study Tip</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">When asked to design an agent, always call out the sandwich explicitly: <em>"I'd put identity verification and mandatory data lookups in a deterministic block before the LLM sees any context, and all writes and audit logs in a deterministic block after."</em> That language signals you understand the hybrid model.</p>
+        </div>
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">✅ Agent Script Advantage</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In Agent Script the sandwich is <em>enforced in code</em>. The <code>before_reasoning:</code> block runs unconditionally before the LLM. The <code>after_reasoning:</code> block runs unconditionally after every response. The LLM cannot skip either — they are not instructions, they are code execution.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. VARIABLES / STATE -->
+    <section id="variables">
+      <div class="section-header">
+        <div class="section-icon icon-blue">📦</div>
+        <div>
+          <h2 id="variables-heading">State Management</h2>
+          <p id="variables-subtitle">How state is passed between subagents and steps in the Classic Model</p>
+        </div>
+      </div>
+
+      <!-- CLASSIC panel -->
+      <div id="concepts-variables-classic">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="af-card">
+            <h3>State Management in Classic Model</h3>
+            <p style="margin-bottom:10px;">In the Classic Model there are no session variables. State is passed between subagents and actions through these mechanisms:</p>
+            <ul>
+              <li><strong>Action outputs</strong> — each Action returns outputs that the LLM can reference in the next step</li>
+              <li><strong>Flow variables</strong> — data stored inside a single Flow invocation, not shared across subagents</li>
+              <li><strong>Salesforce records</strong> — write to a record in one subagent, read it in another via a lookup Action</li>
+              <li><strong>Session context</strong> — the LLM retains the conversation history within a session, so earlier outputs are in context</li>
+            </ul>
+          </div>
+          <div class="af-card">
+            <h3>Practical Implications</h3>
+            <p style="margin-bottom:10px;">Without session variables, cross-subagent state requires deliberate design:</p>
+            <ul>
+              <li>If Subagent 1 verifies identity, Subagent 2 must re-verify — or use an Instructions cue like "if the user says they were already verified..."</li>
+              <li>Avoid re-running expensive Apex actions by writing the result to a Salesforce field and doing a cheap lookup in the next subagent</li>
+              <li>Keep subagents self-contained — each should gather what it needs at the START layer via its own Actions</li>
+              <li>The LLM conversation history carries some state, but it's unreliable for critical data — always re-fetch from the source</li>
+            </ul>
+          </div>
+        </div>
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Classic Model Equivalent</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In the Classic model there are no explicit session variables — you pass data between subagents by storing values in Salesforce records or using Flow variables within a single invocation. Agent Script variables are a cleaner abstraction of the same need: <em>don't re-fetch what you already know.</em></p>
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel -->
+      <div id="concepts-variables-script" style="display:none;">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="af-card">
+            <h3>Declaration &amp; Types</h3>
+            <p style="margin-bottom:10px;">Variables are declared in a top-level <code>variables:</code> block, outside of any subagent. They persist across the full agent session and are shared between subagents.</p>
+            <div class="ex-code" style="font-size:0.78rem;"># Top-level — not inside any subagent
+variables:
+  # Types: mutable string | mutable boolean | mutable integer
+  customer_id:        mutable string  = ""
+  identity_verified:  mutable boolean = False
+  failed_attempts:    mutable integer = 0
+  selected_card_id:   mutable string  = ""</div>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Always initialize with a default value (<code>= ""</code>, <code>= False</code>, <code>= 0</code>). This prevents null errors and makes the initial state explicit.</p>
+          </div>
+          <div class="af-card">
+            <h3>Reading, Setting, and Injecting</h3>
+            <div class="ex-code" style="font-size:0.78rem;"># Read a variable in logic
+if @variables.identity_verified == True
+  ...
+end
+
+# Set a variable from action output
+run @actions.validate_identity
+set @variables.customer_id = @outputs.customer_id
+
+# Inject into an LLM prompt
+| The customer's name is {!@variables.customer_name}.
+| Address them by name throughout the conversation.
+
+# Conditional prompt based on variable
+-&gt;
+  if @variables.card_blocked == True
+    | Inform the customer the card was already blocked.
+  end</div>
+          </div>
+        </div>
+
+        <div class="card-grid cols-2">
+          <div class="af-card">
+            <h3>Slot Filling — Let the LLM Collect Values</h3>
+            <p style="margin-bottom:10px;">Use <code>...</code> as the input value for an action parameter. This tells Agentforce to let the LLM ask the user for the value and fill it automatically via <code>@utils.setVariables</code>.</p>
+            <div class="ex-code" style="font-size:0.78rem;">subagent.actions:
+  - action: open_dispute_case
+    target: flow://Open_Fraud_Dispute_Case
+    inputs:
+      charge_amount: ...    # LLM will ask user
+      charge_date:   ...    # LLM will ask user
+      customer_id:   @variables.customer_id  # already known</div>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Slot filling replaces manual <code>| Ask the customer for X</code> instructions. The LLM handles the conversation and fills the slot before the action fires.</p>
+          </div>
+          <div class="af-card">
+            <h3>Sharing Variables Between Subagents</h3>
+            <p style="margin-bottom:10px;">Since variables are top-level, any subagent can read or write them. This is how you pass state across a multi-step flow without repeating lookups.</p>
+            <div class="ex-code" style="font-size:0.78rem;"># Subagent 1 — Report_Fraud sets this:
+set @variables.identity_verified = True
+set @variables.customer_id = @outputs.customer_id
+
+# Subagent 2 — Block_Card reads it:
+-&gt;
+  if @variables.identity_verified == True
+    # Skip identity check — already done
+    run @actions.get_active_cards
+  else
+    run @actions.validate_identity
+  end</div>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Always document which subagent sets a variable and which ones consume it. This is critical for debugging.</p>
+          </div>
+        </div>
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Classic Model Equivalent</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In the Classic model there are no explicit session variables — you pass data between subagents by storing values in Salesforce records or using Flow variables within a single invocation. Agent Script variables are a cleaner abstraction of the same need: <em>don't re-fetch what you already know.</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. TRANSITIONS / ROUTING -->
+    <section id="transitions">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🔀</div>
+        <div>
+          <h2 id="transitions-heading">Routing Between Subagents</h2>
+          <p id="transitions-subtitle">How the Reasoning Engine routes requests in the Classic Model — automatic, not coded</p>
+        </div>
+      </div>
+
+      <!-- CLASSIC panel -->
+      <div id="concepts-transitions-classic">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="af-card">
+            <h3>Routing in the Classic Model</h3>
+            <p style="margin-bottom:10px;">In the Classic Model, routing between subagents is <strong>automatic and invisible</strong> — you don't write transition logic. The Reasoning Engine handles it.</p>
+            <ul>
+              <li>The Reasoning Engine reads each subagent's <strong>Classification Description</strong> at every turn</li>
+              <li>It picks the best match based on the user's message + conversation history</li>
+              <li>You control routing by writing clear, distinct Classification Descriptions — not code</li>
+              <li>Overlapping descriptions = routing errors. Non-overlapping descriptions = clean routing</li>
+            </ul>
+          </div>
+          <div class="af-card">
+            <h3>How to Guide Routing in Classic</h3>
+            <ul>
+              <li><strong>Classification Description</strong> — the most powerful routing tool. Write it as the exact type of message this subagent should receive</li>
+              <li><strong>Scope: CANNOT handle</strong> — tells the engine what NOT to route here, preventing ambiguous overlap</li>
+              <li><strong>Instructions</strong> — can include "If the customer asks to do X, tell them to Y" as a soft redirect, but this is LLM-dependent</li>
+              <li><strong>Handoff Actions</strong> — to escalate to a human, invoke a Transfer action from Instructions. This is the only "explicit transition" in Classic</li>
+            </ul>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">There is no deterministic "go to subagent X" in the Classic Model. Routing is always probabilistic — the engine reads, infers, and routes.</p>
+          </div>
+        </div>
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Classic Model Equivalent</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In the Classic model, "transitions" don't exist as a concept — routing between subagents happens automatically via the Reasoning Engine's classification step. Agent Script makes transitions explicit and controllable. The important thing is knowing <em>when</em> to route and <em>why</em>, regardless of how it's implemented.</p>
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel -->
+      <div id="concepts-transitions-script" style="display:none;">
+        <div class="card-grid cols-2" style="margin-bottom:24px;">
+          <div class="af-card">
+            <h3>Two Types of Transitions</h3>
+            <table class="ex-table" style="margin-top:8px;">
+              <thead><tr><th>Type</th><th>How to Declare</th><th>Who Decides</th><th>Returns?</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>Reasoning transition</strong> <span class="badge-blue">LLM</span></td>
+                  <td>Defined in <code>reasoning.actions:</code> — exposed to LLM as a tool</td>
+                  <td>LLM chooses when to call it based on conversation context</td>
+                  <td>No — one-way via <code>@utils.transition to @subagent.X</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Deterministic transition</strong> <span class="badge-orange">Code</span></td>
+                  <td>Written directly in <code>-&gt;</code> logic block</td>
+                  <td>Code — fires unconditionally or based on an <code>if</code> condition</td>
+                  <td>No — one-way, discards current prompt</td>
+                </tr>
+                <tr>
+                  <td><strong>Direct subagent call</strong> <span class="badge-green">Returns</span></td>
+                  <td>Use <code>@subagent.X</code> directly in a reasoning action</td>
+                  <td>LLM or script calls the subagent inline</td>
+                  <td>Yes — returns to caller after subagent completes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="af-card">
+            <h3>Transition Code Examples</h3>
+            <div class="ex-code" style="font-size:0.76rem;"># Reasoning transition (LLM-driven) — defined as an action
+subagent.reasoning.actions:
+  - action: go_to_block_card
+    description: Transition to the Block_Card subagent
+                 when the customer wants to block their card.
+    target: @utils.transition to @subagent.Block_Card
+
+# Deterministic transition — in logic block
+-&gt;
+  if @variables.identity_verified == False
+    transition to @subagent.End_Session
+  end
+
+# Filtered — only available when condition is met
+subagent.reasoning.actions:
+  - action: go_to_replacement_card
+    description: Offer replacement after card is blocked.
+    available when @variables.card_blocked == True
+    target: @utils.transition to @subagent.Request_Replacement_Card</div>
+          </div>
+        </div>
+
+        <div class="card-grid cols-2">
+          <div class="af-card">
+            <h3>Best Practices for Transitions</h3>
+            <ul>
+              <li>Name transition actions with the <code>go_to_</code> prefix: <code>go_to_block_card</code>, <code>go_to_escalate_agent</code></li>
+              <li>Place deterministic transitions at the <strong>top</strong> of the instructions block — they act as guards and run first</li>
+              <li>Use <code>available when</code> to conditionally expose reasoning transitions — only show them to the LLM when they make sense</li>
+              <li>Avoid transition loops — if A can transition to B and B can transition to A, add guards to prevent infinite loops</li>
+              <li>Prefer <code>@subagent.X</code> (returns) over <code>@utils.transition</code> (one-way) when you need to continue the current flow after a helper subagent runs</li>
+            </ul>
+          </div>
+          <div class="af-card">
+            <h3>Use <code>after_reasoning:</code> for End-of-Turn Transitions</h3>
+            <p style="margin-bottom:10px;">The <code>after_reasoning:</code> block is ideal for transitions that always happen at the end of a turn — e.g., moving to a summary subagent after every response, or closing the session when a variable is set.</p>
+            <div class="ex-code" style="font-size:0.76rem;">subagent.after_reasoning:
+  -&gt;
+    # Store what the user said into a variable
+    set @variables.last_intent = @inputs.user_message
+
+    # Always transition to handoff if escalation flag is set
+    if @variables.needs_human == True
+      transition to @subagent.Escalate_To_Agent
+    end</div>
+            <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Remember: <code>after_reasoning:</code> cannot contain <code>|</code> pipe lines — only logic and transitions.</p>
+          </div>
+        </div>
+        <div style="background:rgba(0,161,224,0.06);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:14px 20px;margin-top:8px;">
+          <span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">💡 Classic Model Equivalent</span>
+          <p style="font-size:0.82rem;color:var(--muted);margin-top:6px;line-height:1.6;">In the Classic model, "transitions" don't exist as a concept — routing between subagents happens automatically via the Reasoning Engine's classification step. Agent Script makes transitions explicit and controllable. For CTA design questions, the important thing is knowing <em>when</em> to route and <em>why</em>, regardless of how it's implemented.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. EXECUTION FLOW -->
+    <section id="flow">
+      <div class="section-header">
+        <div class="section-icon icon-green">⚙️</div>
+        <div>
+          <h2>Execution Flow</h2>
+          <p>Step-by-step reasoning engine logic when a user sends a message</p>
+        </div>
+      </div>
+      <div class="flow-container">
+        <div class="flow-steps">
+          <div class="flow-step s1">
+            <div class="step-bubble">1</div>
+            <div class="step-label">Classification</div>
+            <div class="step-sub">Match message to Subagent via name &amp; description</div>
+          </div>
+          <div class="flow-step s2">
+            <div class="step-bubble">2</div>
+            <div class="step-label">Context Assembly</div>
+            <div class="step-sub">Gather instructions, Script, and available actions</div>
+          </div>
+          <div class="flow-step s3">
+            <div class="step-bubble">3</div>
+            <div class="step-label">Deterministic Logic</div>
+            <div class="step-sub">Execute scripted rules before LLM evaluation</div>
+          </div>
+          <div class="flow-step s4">
+            <div class="step-bubble">4</div>
+            <div class="step-label">LLM Decision</div>
+            <div class="step-sub">Evaluate prompt: run action, ask for info, or respond</div>
+          </div>
+          <div class="flow-step s5">
+            <div class="step-bubble">5</div>
+            <div class="step-label">Action Execution</div>
+            <div class="step-sub">Run the selected action and collect results</div>
+          </div>
+          <div class="flow-step s6">
+            <div class="step-bubble">6</div>
+            <div class="step-label">Grounding Check</div>
+            <div class="step-sub">Verify answer accuracy and scope compliance</div>
+          </div>
+          <div class="flow-step s7">
+            <div class="step-bubble">7</div>
+            <div class="step-label">Response</div>
+            <div class="step-sub">Deliver final grounded answer to the customer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. RAG -->
+    <section id="rag">
+      <div class="section-header">
+        <div class="section-icon icon-purple">📚</div>
+        <div>
+          <h2>RAG — Retrieval Augmented Generation</h2>
+          <p>How Agentforce grounds responses in real data</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+        <div class="af-card">
+          <h3>🗄️ Agentforce Data Libraries (ADL)</h3>
+          <ul>
+            <li><strong>Structured data:</strong> Cases, Accounts, Knowledge Articles, Salesforce objects</li>
+            <li><strong>Unstructured data:</strong> PDFs, HTML files, plain text documents</li>
+            <li>Indexed and chunked for fast retrieval</li>
+            <li>Chunking uses HTML heading tags (H1–H6) as delimiters</li>
+          </ul>
+        </div>
+        <div class="af-card">
+          <h3>🔍 Retrievers</h3>
+          <ul>
+            <li>Bridge between the search index and the LLM prompt</li>
+            <li>Run at <strong>inference time</strong> — not pre-baked into the model</li>
+            <li>Augment AI responses with contextual, up-to-date data</li>
+            <li>Spread content across multiple fields (Question, Description, Resolution) for better retrieval</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. BEST PRACTICES -->
+    <section id="bestpractices">
+      <div class="section-header">
+        <div class="section-icon icon-green">🏆</div>
+        <div>
+          <h2>Best Practices</h2>
+          <p>Context engineering, instructions, actions, and RAG data curation</p>
+        </div>
+      </div>
+      <!-- CLASSIC panel: hide Variables and Transitions cards -->
+      <div id="concepts-bp-classic">
+        <div class="bp-grid">
+
+          <div class="bp-card">
+            <h3>🧩 Context Engineering</h3>
+            <div class="do-dont">
+              <div class="dont">Overload prompts trying to craft perfect words</div>
+              <div class="do">Design a holistic system of distinct subagents and explicit rules</div>
+              <div class="dont">Start with long, complex instruction sets</div>
+              <div class="do">Start with 1–3 key guidelines per subagent and iterate</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>🏢 Subagent Design</h3>
+            <div class="do-dont">
+              <div class="dont">Create overlapping subagents (e.g., "Product Support" + "Troubleshooting")</div>
+              <div class="do">Keep subagents clear, distinct, and non-overlapping</div>
+              <div class="dont">Leave scope ambiguous</div>
+              <div class="do">Define explicit scope: what the agent CAN and CANNOT do</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚡ Actions</h3>
+            <div class="do-dont">
+              <div class="do">Use highly descriptive Action API Names — the LLM reads these to pick the right tool</div>
+              <div class="do">Write clear Action Instructions: what it does, inputs required, when to invoke</div>
+              <div class="do">Give explicit decision criteria when two actions are similar</div>
+              <div class="dont">Leave the LLM to guess when to use similar actions</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>💬 Instructions Language</h3>
+            <div class="do-dont">
+              <div class="do">Use "always" and "never" sparingly and intentionally — they carry heavy weight</div>
+              <div class="do">Use exact action API names in instructions for correct matching</div>
+              <div class="dont">Encode complex multi-step sequences in natural language instructions</div>
+              <div class="do">Use Agentforce Script or Flows for mandatory sequential logic</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>📄 RAG Data Curation</h3>
+            <div class="do-dont">
+              <div class="do">Structure HTML/text with H1–H6 headings — chunking uses these as delimiters</div>
+              <div class="do">Spread long content across multiple Salesforce fields (Question, Description, Resolution)</div>
+              <div class="dont">Cram all content into a single long-text field</div>
+              <div class="dont">Use unstructured blobs of text without headings</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚖️ Hybrid Reasoning</h3>
+            <div class="do-dont">
+              <div class="do">Use Instructions for tone, behavior, and flexible conversation</div>
+              <div class="do">Use Agentforce Script for deterministic, mandatory, or sensitive business logic</div>
+              <div class="dont">Use LLM instructions to handle calculations or database writes</div>
+              <div class="dont">Use hard-coded rules for open-ended conversational responses</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚡ Action Design</h3>
+            <div class="do-dont">
+              <div class="do">Use highly descriptive Action API names (e.g., Validate_Customer_Identity) — the LLM reads these to pick the right tool</div>
+              <div class="do">Write clear Action descriptions: what it does, what inputs it needs, and exactly when to invoke it</div>
+              <div class="dont">Use double underscores (__) in Action API names — they conflict with Salesforce custom field notation</div>
+              <div class="dont">Configure two similar actions without explicit decision criteria — the LLM will guess which to use</div>
+            </div>
+          </div>
+
+        </div>
+        <div style="background:rgba(100,116,139,0.07);border:1px solid rgba(100,116,139,0.2);border-radius:10px;padding:12px 18px;margin-top:8px;font-size:0.8rem;color:var(--muted);">
+          Variables, Transitions, and Agent Script-specific best practices — switch to Agent Script to view them.
+        </div>
+      </div>
+
+      <!-- AGENT SCRIPT panel: all cards including Variables and Transitions -->
+      <div id="concepts-bp-script" style="display:none;">
+        <div class="bp-grid">
+
+          <div class="bp-card">
+            <h3>🧩 Context Engineering</h3>
+            <div class="do-dont">
+              <div class="dont">Overload prompts trying to craft perfect words</div>
+              <div class="do">Design a holistic system of distinct subagents and explicit rules</div>
+              <div class="dont">Start with long, complex instruction sets</div>
+              <div class="do">Start with 1–3 key guidelines per subagent and iterate</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>🏢 Subagent Design</h3>
+            <div class="do-dont">
+              <div class="dont">Create overlapping subagents (e.g., "Product Support" + "Troubleshooting")</div>
+              <div class="do">Keep subagents clear, distinct, and non-overlapping</div>
+              <div class="dont">Leave scope ambiguous</div>
+              <div class="do">Define explicit scope: what the agent CAN and CANNOT do</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚡ Actions</h3>
+            <div class="do-dont">
+              <div class="do">Use highly descriptive Action API Names — the LLM reads these to pick the right tool</div>
+              <div class="do">Write clear Action Instructions: what it does, inputs required, when to invoke</div>
+              <div class="do">Give explicit decision criteria when two actions are similar</div>
+              <div class="dont">Leave the LLM to guess when to use similar actions</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>💬 Instructions Language</h3>
+            <div class="do-dont">
+              <div class="do">Use "always" and "never" sparingly and intentionally — they carry heavy weight</div>
+              <div class="do">Use exact action API names in instructions for correct matching</div>
+              <div class="dont">Encode complex multi-step sequences in natural language instructions</div>
+              <div class="do">Use Agentforce Script or Flows for mandatory sequential logic</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>📄 RAG Data Curation</h3>
+            <div class="do-dont">
+              <div class="do">Structure HTML/text with H1–H6 headings — chunking uses these as delimiters</div>
+              <div class="do">Spread long content across multiple Salesforce fields (Question, Description, Resolution)</div>
+              <div class="dont">Cram all content into a single long-text field</div>
+              <div class="dont">Use unstructured blobs of text without headings</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚖️ Hybrid Reasoning</h3>
+            <div class="do-dont">
+              <div class="do">Use Instructions for tone, behavior, and flexible conversation</div>
+              <div class="do">Use Agentforce Script for deterministic, mandatory, or sensitive business logic</div>
+              <div class="dont">Use LLM instructions to handle calculations or database writes</div>
+              <div class="dont">Use hard-coded rules for open-ended conversational responses</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>📦 Variables</h3>
+            <div class="do-dont">
+              <div class="do">Always initialize variables with a default value ("", False, 0) — prevents null errors and makes state explicit</div>
+              <div class="do">Use variables to share state between subagents instead of re-running the same lookup actions</div>
+              <div class="do">Use slot filling (set input to "...") to let the LLM collect required action inputs naturally from the user</div>
+              <div class="dont">Store sensitive data (passwords, full card numbers) in session variables</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>🔀 Transitions</h3>
+            <div class="do-dont">
+              <div class="do">Prefix all transition actions with "go_to_" — makes routing intent clear to both you and the LLM</div>
+              <div class="do">Place deterministic transitions at the TOP of the instructions block — they act as early-exit guards</div>
+              <div class="do">Use "available when" to hide transitions from the LLM until the right conditions are met</div>
+              <div class="dont">Create transition loops without explicit guards — A to B to A will spin forever</div>
+            </div>
+          </div>
+
+          <div class="bp-card">
+            <h3>⚡ Action Design</h3>
+            <div class="do-dont">
+              <div class="do">Set filter_from_agent: True on actions whose output feeds other actions only — keeps LLM context clean</div>
+              <div class="do">Use "available when" on reasoning actions to gate tools by variable state — only show the LLM what's relevant</div>
+              <div class="do">Chain reasoning actions by adding "run @actions.next" after the first — forces deterministic follow-up steps</div>
+              <div class="dont">Use double underscores (__) in action API names — they conflict with Salesforce custom field notation and break parsing</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FULL MERMAID OVERVIEW -->
+    <section id="overview">
+      <div class="section-header">
+        <div class="section-icon icon-blue">🗺️</div>
+        <div>
+          <h2>Full Architecture Overview</h2>
+          <p>End-to-end diagram from user message to grounded response</p>
+        </div>
+      </div>
+      <div class="mermaid-container">
+        <div id="mermaid-diagram" class="mermaid"></div>
+      </div>
+    </section>
+
+  </div><!-- /content-wrap -->
+</div><!-- /tab-concepts -->
+
+
+<!-- ══════════════════════════════════════════
+     TAB 2 — AGENT TYPES
+══════════════════════════════════════════ -->
+<div id="tab-agents" class="tab-panel">
+  <div class="content-wrap">
+
+    <!-- CUSTOMER SERVICE -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon icon-blue">🎧</div>
+        <div>
+          <h2>Customer Service Agents</h2>
+          <p>Customer-facing agents for support, deflection, and case management</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+        <div class="af-card">
+          <h3>🎧 Service Agent <span class="badge-blue">Customer Service Agent</span></h3>
+          <p>Delivers personalized customer interactions by answering FAQs directly from your knowledge base. Autonomously handles the creation and management of support cases and intelligently escalates complex issues to a human service representative when needed.</p>
+          <ul style="margin-top:12px;">
+            <li>Answers FAQs from Knowledge Base (RAG)</li>
+            <li>Creates and manages support cases</li>
+            <li>Escalates to human agent when needed</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALES -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon icon-green">💼</div>
+        <div>
+          <h2>Sales Agents</h2>
+          <p>Agents that assist across the full sales cycle — from prospecting to closing</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+
+        <div class="af-card">
+          <h3>📞 SDR Agent <span class="badge-green">Sales Development Representative</span></h3>
+          <p>Prospects and generates pipeline 24/7. Intelligently engages leads with personalized content, answers common questions, and schedules meetings.</p>
+          <ul style="margin-top:12px;">
+            <li>24/7 lead engagement</li>
+            <li>Personalized outreach content</li>
+            <li>Meeting scheduling</li>
+          </ul>
+        </div>
+
+        <div class="af-card">
+          <h3>🏋️ Sales Coach Agent <span class="badge-green">Coaching</span></h3>
+          <p>Equips sales representatives with confidence and practice to close deals through AI-powered coaching. Provides personalized, actionable, stage-specific feedback on sales pitches and role-play sessions.</p>
+          <ul style="margin-top:12px;">
+            <li>Role-play and pitch simulation</li>
+            <li>Stage-specific feedback</li>
+            <li>Deal readiness assessment</li>
+          </ul>
+        </div>
+
+        <div class="af-card">
+          <h3>🤝 Deal Support Agent <span class="badge-green">Deal Management</span></h3>
+          <p>Assists sales teams in managing and progressing deals from creation to closing. Helps the deal closing team track progress and initiate deal-related communications.</p>
+          <ul style="margin-top:12px;">
+            <li>Deal progress tracking</li>
+            <li>Deal-related communications</li>
+            <li>Creation to close support</li>
+          </ul>
+        </div>
+
+        <div class="af-card">
+          <h3>🌐 Sales Prospecting Agent <span class="badge-green">Website</span></h3>
+          <p>Answers sales and pricing questions and qualifies leads directly from a website. Can transfer the conversation to other agents when required.</p>
+          <ul style="margin-top:12px;">
+            <li>Live website lead qualification</li>
+            <li>Sales and pricing Q&amp;A</li>
+            <li>Transfers to other agents</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERNAL & SPECIALIZED -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon icon-purple">🏢</div>
+        <div>
+          <h2>Internal &amp; Specialized Agents</h2>
+          <p>Employee-facing and domain-specific agents for internal workflows</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+
+        <div class="af-card">
+          <h3>👤 Employee Agent <span class="badge-purple">Internal</span> <span class="badge-orange">Not GA</span></h3>
+          <p>Interacts with employees via natural language to provide data, insights, and task automation. Ensures secure access to CRM data across channels such as Salesforce, Mobile, and Slack.</p>
+          <ul style="margin-top:12px;">
+            <li>Natural language CRM access</li>
+            <li>Available on Slack, Mobile, Salesforce UI</li>
+            <li>Task automation for internal teams</li>
+          </ul>
+        </div>
+
+        <div class="af-card">
+          <h3>🏦 Loan Approval Agent <span class="badge-purple">Financial Services</span></h3>
+          <p>A specialized agent built for financial services teams, designed to help manage and expedite the loan approval process.</p>
+          <ul style="margin-top:12px;">
+            <li>Loan application management</li>
+            <li>Approval process acceleration</li>
+            <li>Built for Financial Services Cloud</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GENERAL & MULTI-CLOUD -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon icon-orange">☁️</div>
+        <div>
+          <h2>General &amp; Multi-Cloud Agents</h2>
+          <p>Base agents and cross-cloud agents for broader platform workflows</p>
+        </div>
+      </div>
+      <div class="card-grid cols-2">
+
+        <div class="af-card">
+          <h3>⚙️ Agentforce Default Agent <span class="badge-orange">General</span></h3>
+          <p>The standard base agent used for general workflows and tasks within the platform. Starting point for custom agent builds without a predefined template.</p>
+          <ul style="margin-top:12px;">
+            <li>General-purpose baseline</li>
+            <li>Customizable for any domain</li>
+            <li>Foundation for bespoke builds</li>
+          </ul>
+        </div>
+
+        <div class="af-card">
+          <h3>📣 Marketing, Commerce &amp; Campaign Agents <span class="badge-orange">Multi-Cloud</span></h3>
+          <p>Additional agent types designed to handle specific marketing campaigns, commerce workflows, and other domain-specific tasks across the Salesforce ecosystem.</p>
+          <ul style="margin-top:12px;">
+            <li>Marketing Cloud campaign agents</li>
+            <li>Commerce Cloud workflow agents</li>
+            <li>Cross-cloud domain specialists</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /content-wrap -->
+</div><!-- /tab-agents -->
+
+<!-- ══════════════════════════════════════════
+     TAB 3 — REAL EXAMPLE: BANKING AGENT
+══════════════════════════════════════════ -->
+<div id="tab-example" class="tab-panel">
+  <div style="max-width:1000px;margin:0 auto;padding:40px 24px;display:flex;flex-direction:column;gap:24px;">
+
+    <!-- INTRO -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:background 0.3s,border-color 0.3s;">
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">Real-World Example</div>
+      <h2 style="font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:10px;transition:color 0.3s;">🏦 Banking Agent — Fraud &amp; Card Management</h2>
+      <p style="font-size:0.88rem;color:var(--muted);line-height:1.7;max-width:860px;transition:color 0.3s;">
+        A customer contacts the bank's chat to report an unrecognized charge, block their card, and request a replacement.
+        Agent Profile, Subagents, RAG, and the Conversation are the same in both models. Only the Sandwich implementation differs.
+      </p>
+      <!-- Model switcher -->
+      <div style="display:flex;gap:8px;margin-top:18px;">
+        <button id="ex-btn-classic" onclick="switchExample('classic')"
+          style="padding:8px 18px;font-size:0.82rem;font-weight:700;border-radius:8px;border:2px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s;">
+          🏛️ Classic Model
+        </button>
+        <button id="ex-btn-script" onclick="switchExample('script')"
+          style="padding:8px 18px;font-size:0.82rem;font-weight:700;border-radius:8px;border:2px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;">
+          📄 Agent Script
+        </button>
+      </div>
+      <div id="ex-model-label" style="margin-top:10px;font-size:0.78rem;color:var(--muted);">
+        Showing: <strong style="color:var(--text);">Classic Model</strong> — Instructions + Actions in the Builder UI, no code in the agent definition.
+      </div>
+    </div>
+
+    <!-- STEP 1: AGENT PROFILE -->
+    <div class="ex-section">
+      <div class="ex-header">
+        <div>
+          <h3>🤖 Agent Profile</h3>
+          <p>Name, channel, persona — the top-level identity of the agent</p>
+        </div>
+      </div>
+      <div class="ex-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+          <div class="ex-field">
+            <div class="ex-label">Agent Name</div>
+            <div class="ex-value">Clara — Security Assistant</div>
+          </div>
+          <div class="ex-field">
+            <div class="ex-label">Agent User (Identity)</div>
+            <div class="ex-value">clara.agent@bank.com (dedicated Service user)</div>
+          </div>
+          <div class="ex-field">
+            <div class="ex-label">Channels</div>
+            <div class="ex-value">Embedded Service (web banking), WhatsApp Messaging</div>
+          </div>
+          <div class="ex-field" style="grid-column:1/-1;">
+            <div class="ex-label">System Prompt / Persona</div>
+            <div class="ex-code">You are Clara, a security assistant for BankCorp. You help customers report fraud, block cards, and request replacements. You are empathetic and efficient. You never invent information — all answers must come from verified data or system results. You do not negotiate pricing, process refunds, or close accounts.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: SUBAGENTS -->
+    <div class="ex-section">
+      <div class="ex-header">
+        <div>
+          <h3>🏢 Subagents</h3>
+          <p>Classification description, scope, instructions, and actions for each subagent</p>
+        </div>
+      </div>
+      <div class="ex-body">
+
+          <!-- SA1 -->
+          <div style="border:1px solid rgba(0,161,224,0.3);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+            <div style="background:rgba(0,161,224,0.08);padding:12px 18px;border-bottom:1px solid rgba(0,161,224,0.2);">
+              <strong style="color:var(--accent);font-size:0.9rem;">Subagent 1 — Report_Unrecognized_Charge</strong>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">"I see a charge I didn't make" / "There's a suspicious transaction"</div>
+            </div>
+            <div style="padding:18px;">
+              <div class="ex-field"><div class="ex-label">Classification Description</div>
+                <div class="ex-code">The customer is asking about a charge, transaction, or movement on their card that they don't recognize, didn't authorize, or consider suspicious or fraudulent.</div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Scope</div>
+                <div class="scope-row">
+                  <div class="scope-can"><h5>CAN Handle</h5><ul><li>Look up recent transactions</li><li>Open a fraud dispute case</li><li>Explain the dispute resolution process</li><li>Escalate to card blocking if customer requests it</li></ul></div>
+                  <div class="scope-cant"><h5>CANNOT Handle</h5><ul><li>Resolve the dispute or issue refunds</li><li>Access accounts the customer doesn't own</li><li>Block the card (that's Subagent 2)</li><li>Make promises about resolution timelines</li></ul></div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Instructions</div>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                  <div class="ex-code">1. Always ask the customer to confirm the exact amount and approximate date of the charge before invoking Open_Fraud_Dispute_Case. Do not open the case with incomplete data.</div>
+                  <div class="ex-code">2. If the customer cannot remember the exact amount, invoke Get_Recent_Transactions to show the last 10 movements and ask them to identify the suspicious one(s).</div>
+                  <div class="ex-code">3. After successfully opening the case, always share the case number and inform the customer of the next steps using Get_Dispute_Resolution_Info.</div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Actions</div>
+                <table class="ex-table"><thead><tr><th>API Name</th><th>Type</th><th>What It Does</th><th>When to Invoke</th></tr></thead>
+                <tbody>
+                  <tr><td>Validate_Customer_Identity</td><td>Flow</td><td>Confirms authenticated user is the cardholder. Returns <code>verified</code> and customer ID.</td><td>Always — first action</td></tr>
+                  <tr><td>Get_Recent_Transactions</td><td>Apex</td><td>Queries last 10 card transactions. Returns date, merchant, amount.</td><td>When customer can't recall exact charge details</td></tr>
+                  <tr><td>Open_Fraud_Dispute_Case</td><td>Flow</td><td>Creates a Case with Type = "Fraud Dispute". Returns Case Number.</td><td>After customer confirms amount and date</td></tr>
+                  <tr><td>Get_Dispute_Resolution_Info</td><td>Prompt Template + ADL</td><td>Retrieves resolution timeline from Knowledge Base by card type.</td><td>Immediately after case is created</td></tr>
+                </tbody></table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SA2 -->
+          <div style="border:1px solid rgba(249,115,22,0.3);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+            <div style="background:rgba(249,115,22,0.08);padding:12px 18px;border-bottom:1px solid rgba(249,115,22,0.2);">
+              <strong style="color:#fb923c;font-size:0.9rem;">Subagent 2 — Block_Card</strong>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">"Block my card" / "I lost my card" / "Someone stole my card"</div>
+            </div>
+            <div style="padding:18px;">
+              <div class="ex-field"><div class="ex-label">Classification Description</div>
+                <div class="ex-code">The customer wants to block, freeze, cancel, or deactivate their card — because it was lost, stolen, or they detected fraud and want to prevent further charges.</div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Scope</div>
+                <div class="scope-row">
+                  <div class="scope-can"><h5>CAN Handle</h5><ul><li>Block a debit or credit card immediately</li><li>Confirm which card was blocked</li><li>Inform about impact on linked services</li><li>Offer to start a replacement request</li></ul></div>
+                  <div class="scope-cant"><h5>CANNOT Handle</h5><ul><li>Unblock cards (requires branch verification)</li><li>Block full accounts or other products</li><li>Block a card without customer's explicit confirmation</li></ul></div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Instructions</div>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                  <div class="ex-code">1. Never invoke Block_Card_Immediately without first asking the customer to confirm the last 4 digits of the card to block. Blocking is irreversible via this channel.</div>
+                  <div class="ex-code">2. If the customer is arriving from a fraud report (identity already verified), do not re-ask for identity — the session variable identity_verified will be true.</div>
+                  <div class="ex-code">3. After confirming the block, always ask: "Would you like me to start the process for a replacement card?" — do not assume they want one.</div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Actions</div>
+                <table class="ex-table"><thead><tr><th>API Name</th><th>Type</th><th>What It Does</th><th>When to Invoke</th></tr></thead>
+                <tbody>
+                  <tr><td>Validate_Customer_Identity</td><td>Flow</td><td>Reusable action. Skipped if <code>identity_verified = true</code> in session.</td><td>Only if not already verified</td></tr>
+                  <tr><td>Get_Customer_Active_Cards</td><td>Apex</td><td>Returns active cards: last 4 digits, card type, network.</td><td>Always — so customer can confirm which to block</td></tr>
+                  <tr><td>Block_Card_Immediately</td><td>Apex</td><td>Sends real-time block request to core banking API. Returns confirmation timestamp.</td><td>Only after customer confirms last 4 digits</td></tr>
+                  <tr><td>Log_Card_Block_Event</td><td>Flow</td><td>Creates audit record: card ID, timestamp, channel, reason.</td><td>Always — immediately after block succeeds</td></tr>
+                </tbody></table>
+              </div>
+            </div>
+          </div>
+
+          <!-- SA3 -->
+          <div style="border:1px solid rgba(34,197,94,0.3);border-radius:10px;overflow:hidden;">
+            <div style="background:rgba(34,197,94,0.08);padding:12px 18px;border-bottom:1px solid rgba(34,197,94,0.2);">
+              <strong style="color:#4ade80;font-size:0.9rem;">Subagent 3 — Request_Replacement_Card</strong>
+              <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">"I need a new card" / "Send me a replacement" / "When does my new card arrive?"</div>
+            </div>
+            <div style="padding:18px;">
+              <div class="ex-field"><div class="ex-label">Classification Description</div>
+                <div class="ex-code">The customer wants to request a new card to replace one that was blocked, lost, stolen, or damaged. They may also be asking about the status of a replacement already requested.</div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Scope</div>
+                <div class="scope-row">
+                  <div class="scope-can"><h5>CAN Handle</h5><ul><li>Create a replacement card request</li><li>Confirm or update the shipping address</li><li>Check status of an existing replacement request</li></ul></div>
+                  <div class="scope-cant"><h5>CANNOT Handle</h5><ul><li>Upgrade card type or change credit limit</li><li>Issue a card for a new product (that's sales)</li><li>Create a duplicate if one is already active</li></ul></div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Instructions</div>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                  <div class="ex-code">1. Always invoke Get_Replacement_Card_Status before creating a new request. If an active request already exists, show its status instead of creating a duplicate.</div>
+                  <div class="ex-code">2. Always confirm the shipping address on file with the customer before invoking Create_Replacement_Card_Request. Ask if they want to use the address on file or a different one.</div>
+                  <div class="ex-code">3. After creating the request, always provide the tracking reference number and estimated delivery timeframe from Get_Card_Delivery_Terms.</div>
+                </div>
+              </div>
+              <div class="ex-field"><div class="ex-label">Actions</div>
+                <table class="ex-table"><thead><tr><th>API Name</th><th>Type</th><th>What It Does</th><th>When to Invoke</th></tr></thead>
+                <tbody>
+                  <tr><td>Get_Replacement_Card_Status</td><td>Apex</td><td>Checks if a replacement already exists. Returns status and delivery date if found.</td><td>Always — first action</td></tr>
+                  <tr><td>Get_Customer_Address_On_File</td><td>Apex</td><td>Returns the registered mailing address for confirmation.</td><td>Before creating the request</td></tr>
+                  <tr><td>Create_Replacement_Card_Request</td><td>Flow</td><td>Submits replacement to card ops system. Returns tracking reference number.</td><td>After address is confirmed</td></tr>
+                  <tr><td>Get_Card_Delivery_Terms</td><td>Prompt Template + ADL</td><td>Retrieves delivery timeline by card type and region from Knowledge Base.</td><td>After request is created</td></tr>
+                </tbody></table>
+              </div>
+            </div>
+          </div>
+
+      </div><!-- /ex-body -->
+    </div><!-- /ex-section subagents -->
+
+    <!-- STEP 3: DETERMINISTIC SANDWICH — DUAL VERSION -->
+    <div class="ex-section">
+      <div class="ex-header">
+        <div>
+          <h3>🥪 Deterministic Sandwich</h3>
+          <p id="ex-sandwich-subtitle">Classic Model — sandwich as a design pattern, enforced via Flows and Instructions</p>
+        </div>
+      </div>
+      <div class="ex-body">
+
+        <!-- ── CLASSIC VERSION ── -->
+        <div id="ex-sandwich-classic">
+          <div class="ex-grid">
+            <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+              <div style="background:rgba(0,161,224,0.08);padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.82rem;font-weight:700;color:var(--accent);">Subagent 1 — Report Fraud</div>
+              <div style="padding:16px;"><div class="sandwich-ex">
+                <div class="se-layer se-det"><strong>🔒 START (Flow)</strong><br><span>Invoke <code>Validate_Customer_Identity</code> Flow. If verification fails → end session. Store <code>customer_id</code> in Flow variable passed as action output.</span></div>
+                <div class="se-arrow">↓ action output passed as context to LLM ↓</div>
+                <div class="se-layer se-ai"><strong>🧠 MIDDLE (LLM — Instructions)</strong><br><span>"If the customer cannot recall the charge, invoke Get_Recent_Transactions. Confirm amount and date before opening a dispute."</span></div>
+                <div class="se-arrow">↑ LLM collects confirmed data ↑</div>
+                <div class="se-layer se-det"><strong>🔒 END (Flow)</strong><br><span>LLM invokes <code>Open_Fraud_Dispute_Case</code> Flow (with confirmed params). LLM then invokes <code>Get_Dispute_Resolution_Info</code>.</span></div>
+              </div></div>
+            </div>
+            <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+              <div style="background:rgba(249,115,22,0.08);padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.82rem;font-weight:700;color:#fb923c;">Subagent 2 — Block Card</div>
+              <div style="padding:16px;"><div class="sandwich-ex">
+                <div class="se-layer se-det"><strong>🔒 START (Flow)</strong><br><span>Invoke <code>Get_Customer_Active_Cards</code> Apex Action. If identity not yet verified, invoke <code>Validate_Customer_Identity</code> first.</span></div>
+                <div class="se-arrow">↓ card list returned to LLM ↓</div>
+                <div class="se-layer se-ai"><strong>🧠 MIDDLE (LLM — Instructions)</strong><br><span>"Never invoke Block_Card_Immediately without explicit confirmation of last 4 digits. If arriving from fraud report, do not re-ask for identity."</span></div>
+                <div class="se-arrow">↑ LLM gets explicit confirmation ↑</div>
+                <div class="se-layer se-det"><strong>🔒 END (Flow)</strong><br><span>LLM invokes <code>Block_Card_Immediately</code>. Then LLM must invoke <code>Log_Card_Block_Event</code>. Both enforced via Instructions ordering.</span></div>
+              </div></div>
+            </div>
+            <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+              <div style="background:rgba(34,197,94,0.08);padding:10px 16px;border-bottom:1px solid var(--border);font-size:0.82rem;font-weight:700;color:#4ade80;">Subagent 3 — Replacement</div>
+              <div style="padding:16px;"><div class="sandwich-ex">
+                <div class="se-layer se-det"><strong>🔒 START (Flow)</strong><br><span>Invoke <code>Get_Replacement_Card_Status</code>. If active request found, Instructions tell LLM to show status and stop. Invoke <code>Get_Customer_Address_On_File</code>.</span></div>
+                <div class="se-arrow">↓ status + address passed to LLM ↓</div>
+                <div class="se-layer se-ai"><strong>🧠 MIDDLE (LLM — Instructions)</strong><br><span>"Always confirm address before creating request. If a replacement already exists, show status instead of creating duplicate."</span></div>
+                <div class="se-arrow">↑ LLM gets address confirmation ↑</div>
+                <div class="se-layer se-det"><strong>🔒 END (Flow)</strong><br><span>LLM invokes <code>Create_Replacement_Card_Request</code> Flow. Then invokes <code>Get_Card_Delivery_Terms</code>. Returns tracking + ETA.</span></div>
+              </div></div>
+            </div>
+          </div>
+          <div style="margin-top:16px;background:rgba(100,116,139,0.08);border:1px solid rgba(100,116,139,0.2);border-radius:10px;padding:14px 18px;">
+            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:6px;">⚠️ Limitación del Classic Model</div>
+            <p style="font-size:0.81rem;color:var(--muted);line-height:1.6;">En el Classic Model el sandwich es un <em>patrón de diseño</em>, no una garantía técnica. El END layer depende de que las Instructions indiquen correctamente al LLM qué action invocar y en qué orden. Si las instrucciones son ambiguas, el LLM podría saltarse un paso. El Agent Script elimina esta fragilidad poniendo el END en código.</p>
+          </div>
+        </div>
+
+        <!-- ── AGENT SCRIPT VERSION ── -->
+        <div id="ex-sandwich-script" style="display:none;">
+
+          <!-- SA1 Script -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:8px;">Subagent 1 — Report_Unrecognized_Charge</div>
+            <div class="ex-code" style="font-size:0.76rem;">variables:
+  customer_id:       mutable string  = ""
+  identity_verified: mutable boolean = False
+  case_id:           mutable string  = ""
+
+subagent.actions:
+  - action: validate_identity
+    target: flow://Validate_Customer_Identity_Flow
+  - action: open_fraud_dispute_case
+    target: flow://Open_Fraud_Dispute_Case_Flow
+
+subagent.reasoning.actions:
+  - action: get_recent_transactions
+    description: Retrieve the last 10 card transactions for the customer.
+                 Invoke when the customer cannot recall the exact charge amount or date.
+    target: apex://TransactionController.getRecent
+  - action: get_dispute_resolution_info
+    description: Retrieve fraud dispute resolution timeline from the knowledge base.
+                 Invoke after a case is opened to inform the customer of next steps.
+    target: prompt://Dispute_Resolution_Info_Template
+  - action: go_to_block_card
+    description: Transition to Block_Card subagent when the customer also wants to block their card.
+    available when @variables.case_id != ""
+    target: @utils.transition to @subagent.Block_Card
+
+subagent.before_reasoning:
+  ->
+    run @actions.validate_identity
+    set @variables.customer_id       = @outputs.customer_id
+    set @variables.identity_verified = @outputs.verified
+    if @variables.identity_verified == False
+      transition to @subagent.End_Session
+    end
+
+subagent.reasoning:
+  instructions:
+    ->
+      if @variables.customer_id != ""
+        | The customer has been verified. Their ID is {!@variables.customer_id}.
+      end
+    | Ask the customer to describe the suspicious charge.
+    | If they cannot recall the amount, use {!@actions.get_recent_transactions} to show recent transactions.
+    | Confirm the exact amount and date before proceeding with the dispute.
+
+subagent.after_reasoning:
+  ->
+    if @variables.case_id != ""
+      run @actions.get_dispute_resolution_info
+    end</div>
+          </div>
+
+          <!-- SA2 Script -->
+          <div style="margin-bottom:24px;">
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#fb923c;margin-bottom:8px;">Subagent 2 — Block_Card</div>
+            <div class="ex-code" style="font-size:0.76rem;">subagent.actions:
+  - action: validate_identity
+    target: flow://Validate_Customer_Identity_Flow
+  - action: block_card_immediately
+    target: apex://CardController.blockCard
+  - action: log_card_block_event
+    target: flow://Log_Card_Block_Audit_Flow
+
+subagent.reasoning.actions:
+  - action: get_customer_active_cards
+    description: Return a list of active cards (last 4 digits, type, network).
+                 Always invoke first so the customer can identify which card to block.
+    target: apex://CardController.getActiveCards
+  - action: go_to_replacement_card
+    description: Transition to Request_Replacement_Card after card is successfully blocked.
+    available when @variables.card_blocked == True
+    target: @utils.transition to @subagent.Request_Replacement_Card
+
+subagent.before_reasoning:
+  ->
+    if @variables.identity_verified == False
+      run @actions.validate_identity
+      set @variables.identity_verified = @outputs.verified
+    end
+    run @actions.get_customer_active_cards
+    set @variables.active_cards = @outputs.cards
+
+subagent.reasoning:
+  instructions:
+    | Show the customer their active cards and ask which one to block (confirm last 4 digits).
+    | Never block the card without explicit confirmation of the last 4 digits.
+    | After confirming the block, ask: "Would you like me to request a replacement card?"
+
+subagent.after_reasoning:
+  ->
+    if @variables.confirmed_card_id != ""
+      run @actions.block_card_immediately
+      run @actions.log_card_block_event
+      set @variables.card_blocked = True
+    end</div>
+          </div>
+
+          <!-- SA3 Script -->
+          <div style="margin-bottom:20px;">
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#4ade80;margin-bottom:8px;">Subagent 3 — Request_Replacement_Card</div>
+            <div class="ex-code" style="font-size:0.76rem;">subagent.actions:
+  - action: get_replacement_card_status
+    target: apex://CardController.getReplacementStatus
+  - action: get_customer_address_on_file
+    target: apex://CustomerController.getAddress
+  - action: create_replacement_card_request
+    target: flow://Create_Replacement_Card_Request_Flow
+
+subagent.reasoning.actions:
+  - action: get_card_delivery_terms
+    description: Retrieve delivery timeline by card type and region.
+                 Invoke after creating the replacement request to inform the customer of ETA.
+    target: prompt://Card_Delivery_Terms_Template
+
+subagent.before_reasoning:
+  ->
+    run @actions.get_replacement_card_status
+    if @outputs.replacement_active == True
+      | Inform the customer a replacement request already exists.
+      | Show status: {!@outputs.status} — estimated delivery: {!@outputs.delivery_date}.
+      transition to @subagent.End_Session
+    end
+    run @actions.get_customer_address_on_file
+    set @variables.address_on_file = @outputs.address
+
+subagent.reasoning:
+  instructions:
+    | Show the customer their address on file: {!@variables.address_on_file}.
+    | Ask if they want to use this address or provide a different one.
+    | Only proceed with the replacement request after address is confirmed.
+
+subagent.after_reasoning:
+  ->
+    if @variables.shipping_address != ""
+      run @actions.create_replacement_card_request
+      set @variables.tracking_ref = @outputs.tracking_reference
+      run @actions.get_card_delivery_terms
+    end</div>
+          </div>
+
+          <!-- Session variables -->
+          <div style="background:rgba(0,161,224,0.05);border:1px solid rgba(0,161,224,0.2);border-radius:10px;padding:16px 20px;">
+            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);margin-bottom:10px;">Session Variables — Flow Across Subagents</div>
+            <table class="ex-table" style="margin-top:0;">
+              <thead><tr><th>Variable</th><th>Type</th><th>Set By</th><th>Read By</th></tr></thead>
+              <tbody>
+                <tr><td><code>customer_id</code></td><td>mutable string</td><td>Report_Unrecognized_Charge</td><td>All subagents</td></tr>
+                <tr><td><code>identity_verified</code></td><td>mutable boolean</td><td>Any subagent that runs validate_identity</td><td>Block_Card — skips re-verification if True</td></tr>
+                <tr><td><code>case_id</code></td><td>mutable string</td><td>Report_Unrecognized_Charge</td><td>Unlocks go_to_block_card transition</td></tr>
+                <tr><td><code>card_blocked</code></td><td>mutable boolean</td><td>Block_Card after successful block</td><td>Unlocks go_to_replacement_card transition</td></tr>
+                <tr><td><code>tracking_ref</code></td><td>mutable string</td><td>Request_Replacement_Card</td><td>LLM uses to confirm tracking number to customer</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div><!-- /ex-sandwich-script -->
+
+      </div><!-- /ex-body -->
+    </div><!-- /ex-section sandwich -->
+
+    <!-- STEP 4: RAG STRATEGY -->
+    <div class="ex-section">
+      <div class="ex-header">
+        <div>
+          <h3>📚 RAG / Data Strategy</h3>
+          <p>Knowledge Base structure, article fields, and Retriever wiring per subagent</p>
+        </div>
+      </div>
+      <div class="ex-body">
+          <div class="ex-field">
+            <div class="ex-label">Knowledge Article Structure (HTML for best chunking)</div>
+            <div class="ex-code">&lt;h1&gt;Fraud Dispute Process&lt;/h1&gt;
+&lt;h2&gt;Resolution Timelines by Card Type&lt;/h2&gt;
+&lt;h3&gt;Debit Card — 5 business days&lt;/h3&gt;
+&lt;h3&gt;Credit Card — 10 business days&lt;/h3&gt;
+&lt;h2&gt;What Happens After You File&lt;/h2&gt;
+&lt;h2&gt;International Charges&lt;/h2&gt;
+
+&lt;h1&gt;Replacement Card Policy&lt;/h1&gt;
+&lt;h2&gt;Standard Delivery — 5–7 business days&lt;/h2&gt;
+&lt;h2&gt;Express Delivery — 1–2 business days (fee applies)&lt;/h2&gt;
+&lt;h2&gt;Impact on Recurring Payments&lt;/h2&gt;</div>
+          </div>
+          <div class="ex-field">
+            <div class="ex-label">Salesforce Knowledge Article Fields — spread content, never one blob</div>
+            <table class="ex-table"><thead><tr><th>Field</th><th>Content</th></tr></thead>
+            <tbody>
+              <tr><td>Title</td><td>Short, keyword-rich: "Fraud Dispute — Credit Card Resolution Timeline"</td></tr>
+              <tr><td>Summary</td><td>One sentence: what this article answers</td></tr>
+              <tr><td>Question</td><td>The exact customer question this article answers</td></tr>
+              <tr><td>Answer</td><td>The policy answer in plain language</td></tr>
+              <tr><td>Exceptions</td><td>Edge cases, international rules, fee exceptions</td></tr>
+              <tr><td>Last Reviewed</td><td>Date — Retriever can deprioritize stale content</td></tr>
+            </tbody></table>
+          </div>
+          <div class="ex-field">
+            <div class="ex-label">Retriever Wiring per Subagent</div>
+            <table class="ex-table"><thead><tr><th>Subagent</th><th>Retriever Scope</th><th>Action That Triggers It</th></tr></thead>
+            <tbody>
+              <tr><td>Report_Unrecognized_Charge</td><td>Fraud Dispute articles only</td><td>Get_Dispute_Resolution_Info</td></tr>
+              <tr><td>Block_Card</td><td>Card blocking impact — recurring payments, linked services</td><td>Surfaced proactively in LLM MIDDLE layer</td></tr>
+              <tr><td>Request_Replacement_Card</td><td>Replacement delivery terms, address change policy</td><td>Get_Card_Delivery_Terms</td></tr>
+            </tbody></table>
+          </div>
+      </div><!-- /ex-body -->
+    </div><!-- /ex-section rag -->
+
+    <!-- STEP 5: LIVE CONVERSATION -->
+    <div class="ex-section">
+      <div class="ex-header">
+        <div>
+          <h3>💬 End-to-End Conversation Flow</h3>
+          <p>The full customer interaction — annotated with which component runs at each message</p>
+        </div>
+      </div>
+      <div class="ex-body">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(0,161,224,0.15);border:1px solid rgba(0,161,224,0.3);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:var(--accent);">👤 Customer:</strong> Hi, I see a $250 charge from "AMZN*123" that I didn't make.
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">→ Routes to<br><strong style="color:var(--text);">Report_Unrecognized_Charge</strong></div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:#4ade80;">🤖 Clara:</strong> I'm sorry to hear that. Let me pull up your recent transactions. [<em>runs Get_Recent_Transactions</em>] I can see a charge of $250 from AMZN*123 on May 15th. Can you confirm this is the one you'd like to dispute?
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">⚡ Apex: Get_Recent_Transactions<br>🧠 LLM synthesizes result</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(0,161,224,0.15);border:1px solid rgba(0,161,224,0.3);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:var(--accent);">👤 Customer:</strong> Yes, that's the one. Please dispute it.
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;transition:color 0.3s;">Confirmation received ✓</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:#4ade80;">🤖 Clara:</strong> Done! I've opened dispute case <strong>#FR-2026-88423</strong>. [<em>runs Open_Fraud_Dispute_Case</em>] Our team will review it within 5 business days. [<em>runs Get_Dispute_Resolution_Info from ADL</em>] Would you also like to block your card to prevent any further charges?
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">🔒 Script: Open_Fraud_Dispute_Case<br>📚 RAG: resolution terms<br>→ Transition to Block_Card</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(0,161,224,0.15);border:1px solid rgba(0,161,224,0.3);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:var(--accent);">👤 Customer:</strong> Yes, please block it.
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">→ Routes to <strong style="color:var(--text);">Block_Card</strong><br>identity_verified = true ✓</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:#4ade80;">🤖 Clara:</strong> I can see your Visa card ending in <strong>4821</strong>. Can you confirm these are the last 4 digits of the card you'd like to block?
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">🔒 Script: Get_Customer_Active_Cards<br>🧠 LLM: confirmation step</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(0,161,224,0.15);border:1px solid rgba(0,161,224,0.3);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:var(--accent);">👤 Customer:</strong> Yes, 4821.
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;transition:color 0.3s;">Explicit confirmation ✓</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:10px 14px;flex:1;font-size:0.84rem;color:var(--text);transition:color 0.3s;">
+                <strong style="color:#4ade80;">🤖 Clara:</strong> Your card ending in 4821 has been blocked. [<em>runs Block_Card_Immediately + Log_Card_Block_Event</em>] Would you like me to request a replacement card sent to your address on file?
+              </div>
+              <div style="font-size:0.7rem;color:var(--muted);padding-top:10px;min-width:180px;line-height:1.5;transition:color 0.3s;">🔒 Script: Block + Log<br>→ Transition to<br>Request_Replacement_Card</div>
+            </div>
+
+          </div>
+
+          <div style="margin-top:24px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:16px 20px;text-align:center;">
+            <div style="font-size:1rem;font-weight:700;color:#4ade80;margin-bottom:4px;">🎉 Example Complete!</div>
+            <div style="font-size:0.82rem;color:var(--muted);transition:color 0.3s;">You've reviewed the full Banking Agent configuration — from Agent Profile to a live conversation.</div>
+          </div>
+      </div><!-- /ex-body -->
+    </div><!-- /ex-section conversation -->
+
+  </div><!-- /example inner -->
+</div><!-- /tab-example -->
+
+<footer class="af-footer">
+  Agentforce Architecture Reference · Salesforcepedia · 2026
+</footer>
+
+<script src="js/diagram.js"></script>
+<script>
+function switchConcepts(model) {
+  const isScript = model === 'script';
+
+  // Anchor navs
+  document.getElementById('concepts-nav-classic').style.display = isScript ? 'none' : 'flex';
+  document.getElementById('concepts-nav-script').style.display  = isScript ? 'flex' : 'none';
+
+  // Model label
+  const lbl = document.getElementById('concepts-model-label');
+  if (lbl) lbl.innerHTML = isScript
+    ? 'Showing: <strong style="color:var(--text);">Agent Script</strong> — one script file per subagent, deterministic logic enforced in code.'
+    : 'Showing: <strong style="color:var(--text);">Classic Model</strong> — configure everything in the Agentforce Builder UI, no code files required.';
+
+  // Agent Script section panels
+  document.getElementById('concepts-agentscript-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-agentscript-script').style.display  = isScript ? 'block' : 'none';
+
+  // Blueprint panels
+  document.getElementById('concepts-blueprint-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-blueprint-script').style.display  = isScript ? 'block' : 'none';
+
+  // Sandwich panels
+  document.getElementById('concepts-sandwich-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-sandwich-script').style.display  = isScript ? 'block' : 'none';
+
+  // Variables panels
+  document.getElementById('concepts-variables-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-variables-script').style.display  = isScript ? 'block' : 'none';
+
+  // Transitions panels
+  document.getElementById('concepts-transitions-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-transitions-script').style.display  = isScript ? 'block' : 'none';
+
+  // Best Practices panels
+  document.getElementById('concepts-bp-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('concepts-bp-script').style.display  = isScript ? 'block' : 'none';
+
+  // Section subtitles / headings
+  const sandwichSubtitle = document.querySelector('#sandwich .section-header p');
+  if (sandwichSubtitle) {
+    sandwichSubtitle.textContent = isScript
+      ? 'Code handles the beginning and end — enforced via before_reasoning and after_reasoning blocks'
+      : 'Code handles the beginning and end — AI handles the middle';
+  }
+  const asHeading = document.getElementById('agentscript-heading');
+  const asSubtitle = document.getElementById('agentscript-subtitle');
+  if (asHeading) asHeading.textContent = isScript ? 'Agent Script' : 'Authoring in Builder';
+  if (asSubtitle) asSubtitle.textContent = isScript
+    ? "Agentforce's native language — combines deterministic logic with natural language instructions in one file"
+    : 'Configure everything visually in the Agentforce Builder UI — no code files required';
+  const varHeading = document.getElementById('variables-heading');
+  const varSubtitle = document.getElementById('variables-subtitle');
+  if (varHeading) varHeading.textContent = isScript ? 'Variables' : 'State Management';
+  if (varSubtitle) varSubtitle.textContent = isScript
+    ? 'Shared mutable values that persist across subagents throughout the session'
+    : 'How state is passed between subagents and steps in the Classic Model';
+  const trHeading = document.getElementById('transitions-heading');
+  const trSubtitle = document.getElementById('transitions-subtitle');
+  if (trHeading) trHeading.textContent = isScript ? 'Transitions' : 'Routing Between Subagents';
+  if (trSubtitle) trSubtitle.textContent = isScript
+    ? 'How agents move between subagents — LLM-driven or deterministic'
+    : 'How the Reasoning Engine routes requests in the Classic Model — automatic, not coded';
+
+  // Button styles
+  const bc = document.getElementById('concepts-btn-classic');
+  const bs = document.getElementById('concepts-btn-script');
+  if (bc && bs) {
+    bc.style.background  = isScript ? 'transparent' : 'var(--accent)';
+    bc.style.color       = isScript ? 'var(--muted)' : '#fff';
+    bc.style.borderColor = isScript ? 'var(--border)' : 'var(--accent)';
+    bs.style.background  = isScript ? 'var(--accent)' : 'transparent';
+    bs.style.color       = isScript ? '#fff' : 'var(--muted)';
+    bs.style.borderColor = isScript ? 'var(--accent)' : 'var(--border)';
+  }
+}
+window.switchConcepts = switchConcepts;
+
+function switchExample(model) {
+  const isScript = model === 'script';
+
+  // Toggle sandwich panels
+  document.getElementById('ex-sandwich-classic').style.display = isScript ? 'none' : 'block';
+  document.getElementById('ex-sandwich-script').style.display  = isScript ? 'block' : 'none';
+
+  // Update subtitle
+  document.getElementById('ex-sandwich-subtitle').textContent = isScript
+    ? 'Agent Script — sandwich enforced in code via before_reasoning and after_reasoning blocks'
+    : 'Classic Model — sandwich as a design pattern, enforced via Flows and Instructions';
+
+  // Update model label
+  document.getElementById('ex-model-label').innerHTML = isScript
+    ? 'Showing: <strong style="color:var(--text);">Agent Script</strong> — deterministic logic in code, session variables shared across subagents.'
+    : 'Showing: <strong style="color:var(--text);">Classic Model</strong> — Instructions + Actions in the Builder UI, no code in the agent definition.';
+
+  // Update button styles
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  const btnClassic = document.getElementById('ex-btn-classic');
+  const btnScript  = document.getElementById('ex-btn-script');
+
+  btnClassic.style.background    = isScript ? 'transparent' : 'var(--accent)';
+  btnClassic.style.color         = isScript ? 'var(--muted)' : '#fff';
+  btnClassic.style.borderColor   = isScript ? 'var(--border)' : 'var(--accent)';
+
+  btnScript.style.background    = isScript ? 'var(--accent)' : 'transparent';
+  btnScript.style.color         = isScript ? '#fff' : 'var(--muted)';
+  btnScript.style.borderColor   = isScript ? 'var(--accent)' : 'var(--border)';
+}
+window.switchExample = switchExample;
+</script>
+</body>
+</html>
